@@ -30,6 +30,7 @@ export default function Home() {
   const handleCreateUser = async () => {
     try {
       const newUser: User = {
+        id: 3,
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123',

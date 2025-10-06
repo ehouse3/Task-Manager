@@ -10,6 +10,7 @@ curl.exe -i -X POST "http://localhost:8080"
 
 # Mysql server
 
+docker-compose up -d
 docker exec -it taskmanager-mysql mysql -u root -p 
 
 root123

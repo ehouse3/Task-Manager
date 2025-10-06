@@ -5,10 +5,11 @@ const API_BASE_URL = 'http://localhost:8080/api/users';
 
 // Define User type matching your backend User entity
 export interface User {
-  id?: number;
+  id: number;
   username: string;
+  name?: string;
   email: string;
-  password?: string;
+  password: string;
   createdAt?: string;
 }
 

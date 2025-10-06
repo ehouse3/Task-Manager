@@ -40,33 +40,6 @@ public class UserController {
             .orElse(ResponseEntity.notFound().build());
     }
     
-    // Create (or return) a root user for quick testing
-    // POST /api/users/username/createuser
-    // @PostMapping("/username/createuser")
-    // public ResponseEntity<User> createUser() {
-    //     final String rootUsername = "root";
-    //     final String rootEmail = "root@example.com";
-    //     final String rootPassword = "root123"; // only for testing
-    //     System.out.println("CREATING USER"); 
-
-    //     // If a user with username 'root' already exists return it
-    //     return userRepository.findByUsername(rootUsername)
-    //         .map(ResponseEntity::ok)
-    //         .orElseGet(() -> {
-    //             // If the email is already used by another user, return that user
-    //             if (userRepository.existsByEmail(rootEmail)) {
-    //                 return userRepository.findByEmail(rootEmail)
-    //                     .map(ResponseEntity::ok)
-    //                     .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
-    //             }
-
-    //             // Create a new User entity without forcing the ID (let JPA generate it)
-    //             User root = new User(null, rootUsername, rootEmail, rootPassword);
-    //             System.out.println("creating new user: "+root);
-    //             User saved = userRepository.save(root);
-    //             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
-    //         });
-    // }
     // Create user
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -89,6 +62,7 @@ public class UserController {
             .map(user -> {
                 user.setUsername(userDetails.getUsername());
                 user.setEmail(userDetails.getEmail());
+                user.setNickName(userDetails.getNickName());
                 if (userDetails.getPassword() != null) {
                     user.setPassword(userDetails.getPassword());
                 }

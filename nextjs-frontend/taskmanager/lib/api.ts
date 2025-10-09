@@ -3,14 +3,13 @@ import axios from 'axios';
 // Base URL for your Spring Boot backend
 const API_BASE_URL = 'http://localhost:8080/api/users';
 
-// Define User type matching your backend User entity
+// Define User type matching backend entity
 export interface User {
   id: number;
   username: string;
-  name?: string;
   email: string;
   password: string;
-  createdAt?: string;
+  nickname?: string;
 }
 
 // Create axios instance with default config
@@ -37,6 +36,7 @@ export const userAPI = {
 
   // Create new user
   createUser: async (user: User): Promise<User> => {
+    console.log("api sending user:",user); 
     const response = await apiClient.post('', user);
     return response.data;
   },

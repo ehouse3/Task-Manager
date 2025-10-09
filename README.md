@@ -18,4 +18,8 @@ root123
 mysql> use taskmanager_db;
 mysql> show tables;
 
+# Nextjs 
+
+npm run dev
+
 

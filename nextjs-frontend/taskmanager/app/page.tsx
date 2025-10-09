@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { userAPI, User } from '@/lib/api';
+import { Button } from '@/lib/components';
 
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
@@ -29,11 +30,15 @@ export default function Home() {
 
   const handleCreateUser = async () => {
     try {
+      const username: string | null = prompt("New Username:");
+      const email: string | null = prompt("New Email:");
+      const password: string | null = prompt("New Password:");
+
       const newUser: User = {
-        id: 3,
-        username: 'testuser',
-        email: 'test@example.com',
-        password: 'password123',
+        id: -1,
+        username: username ?? "username",
+        email: email ?? "email",
+        password: password ?? "password",
       };
       await userAPI.createUser(newUser);
       fetchUsers(); // Refresh the list
@@ -42,6 +47,11 @@ export default function Home() {
     }
   };
 
+  const handleCreateTask = async () => {
+
+    
+  }
+
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
@@ -49,23 +59,18 @@ export default function Home() {
     <main className="min-h-screen p-8">
       <h1 className="text-3xl font-bold mb-6">Task Manager - Users</h1>
       
-      <button
-        onClick={handleCreateUser}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Create Test User
-      </button>
+      <Button onClick={handleCreateUser} buttonText='Create Test User'/>
+      
 
       <div className="space-y-4">
         {users.length === 0 ? (
           <p>No users found. Click the button to create one!</p>
         ) : (
           users.map((user) => (
-            <div key={user.id} className="p-4 border rounded shadow">
+            <div key={user.id} className="p-2 border rounded shadow">
               <p><strong>ID:</strong> {user.id}</p>
               <p><strong>Username:</strong> {user.username}</p>
               <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Created:</strong> {user.createdAt}</p>
             </div>
           ))
         )}

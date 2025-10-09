@@ -43,6 +43,7 @@ public class UserController {
     // Create user
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
+        System.out.println("recieved:" + user);
         // Check if username or email already exists
         if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -51,6 +52,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         
+        // Assign Id to null for jpa to catch and assign itself
+        user.setId(null);
+
         User savedUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }

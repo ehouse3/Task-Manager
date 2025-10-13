@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { userAPI, User } from '@/lib/api';
+import { CreateUserDto, User, createUser, getAllUsers } from '@/lib/api/users';
 import { Button } from '@/lib/components';
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const data = await userAPI.getAllUsers();
+      const data = await getAllUsers();
       setUsers(data);
       setError(null);
     } catch (err) {
@@ -34,13 +34,12 @@ export default function Home() {
       const email: string | null = prompt("New Email:");
       const password: string | null = prompt("New Password:");
 
-      const newUser: User = {
-        id: -1,
+      const newUser: CreateUserDto = {
         username: username ?? "username",
         email: email ?? "email",
         password: password ?? "password",
       };
-      await userAPI.createUser(newUser);
+      await createUser(newUser);
       fetchUsers(); // Refresh the list
     } catch (err) {
       console.error('Failed to create user:', err);
@@ -48,7 +47,7 @@ export default function Home() {
   };
 
   const handleCreateTask = async () => {
-
+    
     
   }
 

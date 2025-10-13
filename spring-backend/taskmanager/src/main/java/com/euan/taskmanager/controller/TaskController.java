@@ -29,8 +29,9 @@ public class TaskController {
             .orElseThrow(() -> new RuntimeException("Task not found"));
     }
 
-    @PostMapping("/{id}")
-    public Task postMethodName(@RequestBody Task task) {
+    @PostMapping
+    public Task createTask(@RequestBody Task task) {
+        task.setId(null);
         return taskRepository.save(task);
     }
 
@@ -50,7 +51,7 @@ public class TaskController {
             .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }

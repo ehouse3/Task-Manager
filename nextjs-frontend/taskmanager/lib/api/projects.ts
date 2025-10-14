@@ -5,14 +5,14 @@ export interface Project {
   name: string;
   description: string;
   ownerId: number;
-  taskId: number;
+  taskId: number; 
 }
 
 export interface CreateProjectDto {
   name: string;
-  description: string;
+  description?: string;
   ownerId: number;
-  taskId: number;
+  taskId: number; // convert to array
 }
 
 export interface UpdateProjectDto {
@@ -35,6 +35,7 @@ export const getProjectById = async (id: number): Promise<Project> => {
 export const createProject = async (
   project: CreateProjectDto
 ): Promise<Project> => {
+  console.log("api new project:", project);
   const response = await apiClient.post("/projects", project);
   return response.data;
 };

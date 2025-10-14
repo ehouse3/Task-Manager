@@ -10,7 +10,7 @@ import com.euan.taskmanager.utils.TaskPriority;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findByProjectId(Long projectId);
+    List<Task> findByProject_Id(Long projectId);
     List<Task> findByStatus(TaskStatus status);
     List<Task> findByPriority(TaskPriority priority);
     List<Task> findByAssignedToId(Long userId);

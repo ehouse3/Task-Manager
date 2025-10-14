@@ -3,8 +3,7 @@ Full Stack task management website service.
 
 # Spring
 
-cd .\spring-backend\taskmanager\
-.\mvnw spring-boot:run
+cd .\spring-backend\taskmanager\; .\mvnw spring-boot:run;
 
 curl.exe -i -X POST "http://localhost:8080"
 
@@ -20,6 +19,6 @@ mysql> show tables;
 
 # Nextjs 
 
-npm run dev
+cd .\nextjs-frontend\taskmanager\; npm run dev
 
 

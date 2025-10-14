@@ -1,8 +1,14 @@
 package com.euan.taskmanager.controller;
 
+import com.euan.taskmanager.controller.Dto.CreateProjectDto;
+import com.euan.taskmanager.controller.Dto.UpdateProjectDto;
 import com.euan.taskmanager.model.Project;
+import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.ProjectRepository;
+import com.euan.taskmanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -13,6 +19,9 @@ public class ProjectController {
     
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
     
     @GetMapping
     public List<Project> getAllProjects() {
@@ -20,30 +29,58 @@ public class ProjectController {
     }
     
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Long id) {
+    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return projectRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Project not found"));
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
     
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
-        return projectRepository.save(project);
+    public ResponseEntity<Project> createProject(@RequestBody CreateProjectDto dto) {
+        System.out.println("\n\n\nbackend project recieved (dto):" + dto + "\n\n\n");
+
+        if (dto.getOwnerId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User owner = userRepository.findById(dto.getOwnerId())
+            .orElse(null);
+        if (owner == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Project project = new Project();
+        project.setId(null);
+        project.setName(dto.getName());
+        project.setDescription(dto.getDescription());
+        project.setOwner(owner);
+
+        Project savedProject = projectRepository.save(project);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProject);
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
+    public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody UpdateProjectDto dto) {
         return projectRepository.findById(id)
             .map(project -> {
-                project.setName(projectDetails.getName());
-                project.setOwner(projectDetails.getOwner());
-                project.setTasks(projectDetails.getTasks());
-                return projectRepository.save(project);
+                if (dto.getName() != null) project.setName(dto.getName());
+                if (dto.getDescription() != null) project.setDescription(dto.getDescription());
+                if (dto.getOwnerId() != null) {
+                    User owner = userRepository.findById(dto.getOwnerId()).orElse(null);
+                    if (owner != null) project.setOwner(owner);
+                }
+                Project updatedProject =  projectRepository.save(project);
+                return ResponseEntity.ok(updatedProject);
             })
-            .orElseThrow(() -> new RuntimeException("Project not found"));
+            .orElse(ResponseEntity.notFound().build());
     }
     
     @DeleteMapping("/{id}")
-    public void deleteProject(@PathVariable Long id) {
-        projectRepository.deleteById(id);
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        if (projectRepository.existsById(id)) {
+            projectRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

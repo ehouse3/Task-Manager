@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findByOwnerId(Long ownerId);
-    Project findByTasksId(Long taskId); 
+    // use nested property path so Spring Data resolves owner.id and tasks.id
+    List<Project> findByOwner_Id(Long ownerId);
+    Project findByTasks_Id(Long taskId);
 }

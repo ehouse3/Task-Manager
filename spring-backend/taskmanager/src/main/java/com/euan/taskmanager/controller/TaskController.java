@@ -3,8 +3,9 @@ package com.euan.taskmanager.controller;
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.Task;
 import com.euan.taskmanager.repository.TaskRepository;
-import com.euan.taskmanager.utils.TaskPriority;
-import com.euan.taskmanager.utils.TaskStatus;
+import com.euan.taskmanager.utils.enums.TaskPriority;
+import com.euan.taskmanager.utils.enums.TaskStatus;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

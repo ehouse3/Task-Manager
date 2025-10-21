@@ -1,11 +1,12 @@
 package com.euan.taskmanager.repository;
 
 import com.euan.taskmanager.model.Task;
-import com.euan.taskmanager.utils.TaskStatus;
+import com.euan.taskmanager.utils.enums.TaskPriority;
+import com.euan.taskmanager.utils.enums.TaskStatus;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import com.euan.taskmanager.utils.TaskPriority;
 
 
 @Repository

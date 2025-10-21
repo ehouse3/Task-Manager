@@ -1,7 +1,7 @@
 package com.euan.taskmanager.controller;
 
-import com.euan.taskmanager.controller.Dto.CreateProjectDto;
-import com.euan.taskmanager.controller.Dto.UpdateProjectDto;
+import com.euan.taskmanager.controller.dto.CreateProjectDto;
+import com.euan.taskmanager.controller.dto.UpdateProjectDto;
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.ProjectRepository;

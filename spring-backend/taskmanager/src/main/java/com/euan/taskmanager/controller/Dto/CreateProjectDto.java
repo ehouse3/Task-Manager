@@ -1,4 +1,4 @@
-package com.euan.taskmanager.controller.Dto;
+package com.euan.taskmanager.controller.dto;
 
 public class CreateProjectDto {
     private String name;

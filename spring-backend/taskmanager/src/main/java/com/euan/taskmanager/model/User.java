@@ -1,5 +1,7 @@
 package com.euan.taskmanager.model;
 
+import com.euan.taskmanager.utils.enums.UserRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,9 @@ public class User {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
+
+  @Column(nullable = false)
+  private UserRole role = UserRole.USER;
 
   @Column(nullable = false, unique = true)
   private String username;

@@ -2,7 +2,8 @@ package com.euan.taskmanager.model;
 
 import java.time.LocalDateTime;
 import com.euan.taskmanager.utils.*;
-
+import com.euan.taskmanager.utils.enums.TaskPriority;
+import com.euan.taskmanager.utils.enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;

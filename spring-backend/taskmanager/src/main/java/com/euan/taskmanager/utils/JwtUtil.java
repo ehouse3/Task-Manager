@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+// Utility functions for Jwt (primarily used by Filter)
 @Component
 public class JwtUtil {
     
@@ -21,7 +22,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
     
-    // Generate token
+    // Generate token of user for every verification
     public String generateToken(String username, Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);

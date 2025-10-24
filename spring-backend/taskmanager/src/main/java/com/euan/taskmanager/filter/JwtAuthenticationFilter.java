@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+// Verifies Jwt once per request
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     

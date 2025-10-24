@@ -1,10 +1,9 @@
 package com.euan.taskmanager.controller;
 
 import com.euan.taskmanager.model.User;
-import com.euan.taskmanager.repository.UserRepository;
+import com.euan.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,73 +15,71 @@ import java.util.List;
 public class UserController {
     
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     
     // Get all users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        // Don't send passwords
+        users.forEach(user -> user.setPassword(null));
+        return ResponseEntity.ok(users);
     }
     
     // Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-            .map(ResponseEntity::ok)
+        return userService.getUserById(id)
+            .map(user -> {
+                user.setPassword(null);  // Don't send password
+                return ResponseEntity.ok(user);
+            })
             .orElse(ResponseEntity.notFound().build());
     }
     
     // Get user by username
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return userRepository.findByUsername(username)
-            .map(ResponseEntity::ok)
+        return userService.getUserByUsername(username)
+            .map(user -> {
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            })
             .orElse(ResponseEntity.notFound().build());
     }
     
     // Create user
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        System.out.println("recieved:" + user);
-        // Check if username or email already exists
-        if (userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User createdUser = userService.createUser(user);
+            createdUser.setPassword(null);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (RuntimeException e) { // exception thrown from service
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        
-        // Assign Id to null for jpa to catch and assign itself
-        user.setId(null);
-
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
     
     // Update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        return userRepository.findById(id)
-            .map(user -> {
-                user.setUsername(userDetails.getUsername());
-                user.setEmail(userDetails.getEmail());
-                user.setNickName(userDetails.getNickName());
-                if (userDetails.getPassword() != null) {
-                    user.setPassword(userDetails.getPassword());
-                }
-                User updatedUser = userRepository.save(user);
-                return ResponseEntity.ok(updatedUser);
-            })
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user);
+            updatedUser.setPassword(null);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) { // exception thrown from service
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
     
     // Delete user
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
             return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) { // exception thrown from service
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 }

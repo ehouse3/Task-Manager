@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
+            .authorizeHttpRequests(auth -> auth // Defining endpoints that bypass auth
                 .requestMatchers("/api/auth/**").permitAll()  // Public endpoints
                 .requestMatchers("/api/test/**").permitAll()  // Test endpoints
                 .anyRequest().authenticated()                  // Everything else needs auth

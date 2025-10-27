@@ -5,11 +5,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Service;
 
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 
+@Service
 public class UserService {
     
     @Autowired
@@ -39,6 +40,7 @@ public class UserService {
             throw new RuntimeException("Email already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setId(null);
 
         return userRepository.save(user);
     }

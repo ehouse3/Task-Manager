@@ -1,26 +1,6 @@
 import { apiClient } from "./client";
+import { User, CreateUserDto, UpdateUserDto } from "../types/user";
 
-// Define User type matching backend entity
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  nickname?: string;
-}
-
-export interface CreateUserDto {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface UpdateUserDto {
-  username?: string;
-  email?: string;
-  password?: string;
-  nickname?: string;
-}
 
 // Get all users
 export const getAllUsers = async (): Promise<User[]> => {

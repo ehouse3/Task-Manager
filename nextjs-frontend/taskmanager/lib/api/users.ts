@@ -15,7 +15,7 @@ export const getUserById = async (id: number): Promise<User> => {
 };
 
 // Create new user
-export const createUser = async (user: CreateUserDto): Promise<User> => {
+export const createUser = async (user: CreateUserDto): Promise<User> => { // deprecated, go through auth.ts instead
   const response = await apiClient.post("/users", user);
   return response.data;
 };

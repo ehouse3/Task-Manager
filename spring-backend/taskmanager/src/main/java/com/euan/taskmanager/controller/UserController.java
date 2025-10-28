@@ -50,7 +50,7 @@ public class UserController {
     
     // Create user
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) { // deprecated, go through AuthController.java instead
         try {
             User createdUser = userService.createUser(user);
             createdUser.setPassword(null);

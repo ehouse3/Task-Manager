@@ -2,9 +2,14 @@
 export interface User {
   id: number;
   username: string;
+  userRole: UserRole;
   email: string;
   password: string;
   nickname?: string;
+}
+
+export enum UserRole {
+  USER, ADMIN
 }
 
 export interface CreateUserDto {

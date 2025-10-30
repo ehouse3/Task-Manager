@@ -24,7 +24,7 @@ public class ProjectController {
     private UserRepository userRepository;
     
     @GetMapping
-    public List<Project> getAllProjects() {
+    public ResponseEntity<List<Project>> getAllProjects() {
         return projectRepository.findAll();
     }
     
@@ -37,8 +37,6 @@ public class ProjectController {
     
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody CreateProjectDto dto) {
-        System.out.println("\n\n\nbackend project recieved (dto):" + dto + "\n\n\n");
-
         if (dto.getOwnerId() == null) {
             return ResponseEntity.badRequest().build();
         }

@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user) { // deprecated, go through AuthController.java instead
         try {
             User createdUser = userService.createUser(user);
-            createdUser.setPassword(null);
+            // createdUser.setPassword(null);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (RuntimeException e) { // exception thrown from service
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -65,7 +65,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
             User updatedUser = userService.updateUser(id, user);
-            updatedUser.setPassword(null);
+            // updatedUser.setPassword(null);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) { // exception thrown from service
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

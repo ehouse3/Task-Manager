@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -25,7 +27,8 @@ public class ProjectController {
     
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
-        return projectRepository.findAll();
+        List<Project> projects = projectRepository.findAll();
+        return ResponseEntity.ok(projects);
     }
     
     @GetMapping("/{id}")
@@ -59,18 +62,22 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody UpdateProjectDto dto) {
-        return projectRepository.findById(id)
-            .map(project -> {
-                if (dto.getName() != null) project.setName(dto.getName());
-                if (dto.getDescription() != null) project.setDescription(dto.getDescription());
-                if (dto.getOwnerId() != null) {
-                    User owner = userRepository.findById(dto.getOwnerId()).orElse(null);
-                    if (owner != null) project.setOwner(owner);
-                }
-                Project updatedProject =  projectRepository.save(project);
-                return ResponseEntity.ok(updatedProject);
-            })
-            .orElse(ResponseEntity.notFound().build());
+        // Handle empty project
+        Optional<Project> projecOptional = projectRepository.findById(id);    
+        if (projecOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        // Assign new data, leaving null dto args unchanged
+        Project project = projecOptional.get();
+        if (dto.getName() != null) project.setName(dto.getName().get());
+        if (dto.getDescription() != null) project.setDescription(dto.getDescription().get());
+        if (dto.getOwnerId() != null) {
+            User owner = userRepository.findById(dto.getOwnerId().get()).orElse(null);
+            if (owner != null) project.setOwner(owner);
+        }
+
+        Project updatedProject =  projectRepository.save(project);
+        return ResponseEntity.ok(updatedProject);
+            
     }
     
     @DeleteMapping("/{id}")

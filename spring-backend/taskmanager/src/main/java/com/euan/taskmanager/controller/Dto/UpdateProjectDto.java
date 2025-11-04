@@ -1,5 +1,4 @@
 package com.euan.taskmanager.controller.dto;
-import com.euan.taskmanager.model.Task;
 import java.util.Optional;
 import java.util.List;
 
@@ -7,8 +6,8 @@ import java.util.List;
 public class UpdateProjectDto {
     private Optional<String> name;
     private Optional<String> description;
-    private Optional<Long> ownerId;
-    private Optional<List<Task>> tasks;
+    private Optional<Long> userId;
+    private Optional<List<Long>> taskIds;
 
     public UpdateProjectDto() {}
 
@@ -18,9 +17,9 @@ public class UpdateProjectDto {
     public Optional<String> getDescription() { return description; }
     public void setDescription(Optional<String> description) { this.description = description; }
 
-    public Optional<Long> getOwnerId() { return ownerId; }
-    public void setOwnerId(Optional<Long> ownerId) { this.ownerId = ownerId; }
+    public Optional<Long> getUserId() { return userId; }
+    public void setUserId(Optional<Long> userId) { this.userId = userId; }
 
-    public Optional<List<Task>> getTasks() { return this.tasks; }
-    public void setTasks(Optional<List<Task>> tasks) { this.tasks = tasks; }
+    public Optional<List<Long>> getTaskIds() { return taskIds; }
+    public void setTaskIds(Optional<List<Long>> taskIds) { this.taskIds = taskIds; }
 }

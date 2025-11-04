@@ -26,29 +26,30 @@ public class Project {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User owner;
+    private User user;
 
-    // expose ownerId in JSON (read/write) while keeping owner relationship in the model
+    // expose userId in JSON (read/write) while keeping user relationship in the model
     @Transient
-    private Long ownerId;
+    private Long userId;
 
-    @JsonProperty("ownerId")
-    public Long getOwnerId() {
-        if (this.owner != null) return this.owner.getId();
-        return this.ownerId;
+    @JsonProperty("userId")
+    public Long getuserId() {
+        if (this.user != null) return this.user.getId();
+        return this.userId;
     }
 
-    @JsonProperty("ownerId")
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-        if (ownerId != null) {
-            if (this.owner == null) this.owner = new User();
-            this.owner.setId(ownerId);
+    @JsonProperty("userId")
+    public void setuserId(Long userId) {
+        this.userId = userId;
+        if (userId != null) {
+            if (this.user == null) this.user = new User();
+            this.user.setId(userId);
         }
     }
     
+    // fix
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> tasks;
 

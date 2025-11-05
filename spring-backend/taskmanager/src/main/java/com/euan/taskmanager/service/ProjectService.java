@@ -44,7 +44,7 @@ public class ProjectService {
         Project project = new Project();
         project.setId(null);
         project.setName(dto.getName());
-        project.setuserId(dto.getUserId());
+        project.setUserId(dto.getUserId());
         
         return projectRepository.save(project); 
     }

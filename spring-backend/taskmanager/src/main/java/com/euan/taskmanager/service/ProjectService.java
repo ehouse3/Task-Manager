@@ -44,15 +44,17 @@ public class ProjectService {
         Project project = new Project();
         project.setId(null);
         project.setName(dto.getName());
-        project.setUserId(dto.getUserId());
+        User user = userRepository.findById(dto.getUserId()).get();
+        project.setUser(user);
         
         return projectRepository.save(project); 
     }
 
     public Project updateProject(Long id, UpdateProjectDto dto) {
-        if (projectRepository.existsById(id) == false) throw new RuntimeException("Project not found");
+        if (projectRepository.existsById(id) == false) 
+            throw new RuntimeException("Project not found");
 
-        // Assign new data, leaving null unchanged
+        // Assign new data, leaving null values unchanged
         Project project = projectRepository.findById(id).get();
         if (dto.getName().isPresent()) project.setName(dto.getName().get());
         if (dto.getDescription().isPresent()) project.setDescription(dto.getDescription().get());
@@ -60,8 +62,10 @@ public class ProjectService {
             project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
         } 
         if (dto.getUserId().isPresent()) {
-            User user = userRepository.findById(dto.getUserId().get()).orElse(null);
-            if (user != null) project.setUser(user);
+            if (userRepository.existsById(dto.getUserId().get()) == false)
+                throw new RuntimeException("User not found");
+            User user = userRepository.findById(dto.getUserId().get()).get();
+            project.setUser(user);
         }
 
         return projectRepository.save(project);

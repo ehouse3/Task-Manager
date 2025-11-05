@@ -1,5 +1,76 @@
 package com.euan.taskmanager.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.euan.taskmanager.model.Task;
+import com.euan.taskmanager.model.Project;
+import com.euan.taskmanager.repository.ProjectRepository;
+import com.euan.taskmanager.repository.TaskRepository;
+
+import com.euan.taskmanager.controller.dto.CreateTaskDto;
+import com.euan.taskmanager.controller.dto.UpdateTaskDto;
+
+@Service
 public class TaskService {
-    
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    // Get all tasks
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    // Get task by ID
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
+    }
+
+    // Create task
+    public Task createTask(CreateTaskDto dto) {
+        Task task = new Task();
+
+        task.setId(null);
+        task.setTitle(dto.getTitle());
+        if (projectRepository.existsById(dto.getProjectId()))
+            throw new RuntimeException("Project not found");
+        Project project = projectRepository.findById(dto.getProjectId()).get();
+        task.setProject(project);
+        return taskRepository.save(task);
+    }
+
+    // Update task
+    public Task updateTask( Long id, UpdateTaskDto dto) {
+        if (taskRepository.existsById(id) == false)
+            throw new RuntimeException("Task not found");
+
+        // Assign new data, leaving null values unchanged
+        Task task = taskRepository.findById(id).get();
+        if (dto.getTitle().isPresent()) task.setTitle(dto.getTitle().get());
+        if (dto.getDescription().isPresent()) task.setDescription(dto.getDescription().get());
+        if (dto.getStatus().isPresent()) task.setStatus(dto.getStatus().get());
+        if (dto.getPriority().isPresent()) task.setPriority(dto.getPriority().get());
+        if (dto.getProjectId().isPresent()) { 
+            if (projectRepository.existsById(dto.getProjectId().get()) == false)
+                throw new RuntimeException("Project not found");
+            Project project = projectRepository.findById(dto.getProjectId().get()).get();
+            task.setProject(project);
+        }
+        if (dto.getDueDate().isPresent()) task.setDueDate(dto.getDueDate().get());
+        return taskRepository.save(task);
+    }
+
+    // Delete task
+    public void deleteTask(Long id) {
+        if (taskRepository.existsById(id)) 
+            throw new RuntimeException("Task not found");
+        taskRepository.deleteById(id);
+    }
 }

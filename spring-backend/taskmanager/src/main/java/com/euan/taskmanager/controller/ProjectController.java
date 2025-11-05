@@ -15,26 +15,27 @@ import java.util.List;
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProjectController {
+
     @Autowired
-    private ProjectService projectService; 
-    
+    private ProjectService projectService;
+
     // Get all projects
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
-    
+
     // Get project by ID
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id)
-            .map(project -> {
-                return ResponseEntity.ok(project);
-            })
-            .orElse(ResponseEntity.notFound().build());
+                .map(project -> {
+                    return ResponseEntity.ok(project);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
-    
+
     // Create project
     @PostMapping
     public ResponseEntity<?> createProject(@RequestBody CreateProjectDto dto) {
@@ -55,9 +56,9 @@ public class ProjectController {
         } catch (RuntimeException e) { // Exception thrown from service
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-            
+
     }
-    
+
     // Delete Project
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {

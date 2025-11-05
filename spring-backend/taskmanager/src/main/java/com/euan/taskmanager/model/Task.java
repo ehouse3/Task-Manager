@@ -1,10 +1,10 @@
 package com.euan.taskmanager.model;
 
 import java.time.LocalDateTime;
-import com.euan.taskmanager.utils.*;
 import com.euan.taskmanager.utils.enums.TaskPriority;
 import com.euan.taskmanager.utils.enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,16 +20,14 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-
-
 @Entity
-@Table(name = "tasks")  
+@Table(name = "tasks")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -49,11 +47,13 @@ public class Task {
     @JsonIgnore
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_to")
-    private User assignedTo;
+    @JsonProperty("project_id")
+    public Long getProjectId() {
+        if (project != null)
+            return project.getId();
+        return null;
+    }
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 }
-

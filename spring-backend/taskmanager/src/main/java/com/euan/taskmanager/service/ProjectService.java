@@ -1,5 +1,78 @@
 package com.euan.taskmanager.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.euan.taskmanager.controller.dto.CreateProjectDto;
+import com.euan.taskmanager.controller.dto.UpdateProjectDto;
+import com.euan.taskmanager.model.Project;
+import com.euan.taskmanager.model.User;
+import com.euan.taskmanager.repository.ProjectRepository;
+import com.euan.taskmanager.repository.TaskRepository;
+import com.euan.taskmanager.repository.UserRepository;
+
+
+@Service
 public class ProjectService {
     
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
+    // Get user by ID
+    public Optional<Project> getProjectById(Long id) {
+        return projectRepository.findById(id);
+    }
+
+    public Project createProject(CreateProjectDto dto) {
+        if (userRepository.existsById(dto.getUserId()) == false) {
+            throw new RuntimeException("Project Owner Not Found");
+        }
+
+        Project project = new Project();
+        project.setId(null);
+        project.setName(dto.getName());
+        User user = userRepository.findById(dto.getUserId()).get();
+        project.setUser(user);
+        
+        return projectRepository.save(project); 
+    }
+
+    public Project updateProject(Long id, UpdateProjectDto dto) {
+        if (projectRepository.existsById(id) == false) 
+            throw new RuntimeException("Project not found");
+
+        // Assign new data, leaving null values unchanged
+        Project project = projectRepository.findById(id).get();
+        if (dto.getName().isPresent()) project.setName(dto.getName().get());
+        if (dto.getDescription().isPresent()) project.setDescription(dto.getDescription().get());
+        if (dto.getTaskIds().isPresent()) { // add more verification?
+            project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
+        } 
+        if (dto.getUserId().isPresent()) {
+            if (userRepository.existsById(dto.getUserId().get()) == false)
+                throw new RuntimeException("User not found");
+            User user = userRepository.findById(dto.getUserId().get()).get();
+            project.setUser(user);
+        }
+
+        return projectRepository.save(project);
+    }
+
+    public void deleteProject(Long id) {
+        if (projectRepository.existsById(id) == false) throw new RuntimeException("Project not found");
+        projectRepository.deleteById(id);
+    }
 }

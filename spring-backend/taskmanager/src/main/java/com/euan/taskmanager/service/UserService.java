@@ -28,10 +28,12 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    // Get user by username
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    // Create user
     public User createUser(User user) { // create user dto?
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -45,6 +47,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // Update user
     public User updateUser(long id, User userDetails) { // update user dto?
         User user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -61,6 +64,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // Delete user
     public void deleteUser(long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("User not found");

@@ -41,8 +41,7 @@ public class Project {
     }
 
     // Tasks
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_id")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Task> tasks;
 

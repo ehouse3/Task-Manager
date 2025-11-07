@@ -34,12 +34,11 @@ public class TaskService {
 
     // Create task
     public Task createTask(CreateTaskDto dto) {
+        if (projectRepository.existsById(dto.getProjectId()) == false)
+            throw new RuntimeException("Project not found");
         Task task = new Task();
-
         task.setId(null);
         task.setTitle(dto.getTitle());
-        if (projectRepository.existsById(dto.getProjectId()))
-            throw new RuntimeException("Project not found");
         Project project = projectRepository.findById(dto.getProjectId()).get();
         task.setProject(project);
         return taskRepository.save(task);

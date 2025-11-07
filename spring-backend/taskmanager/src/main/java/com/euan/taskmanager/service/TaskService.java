@@ -10,9 +10,8 @@ import com.euan.taskmanager.model.Task;
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.repository.ProjectRepository;
 import com.euan.taskmanager.repository.TaskRepository;
-
-import com.euan.taskmanager.controller.dto.CreateTaskDto;
-import com.euan.taskmanager.controller.dto.UpdateTaskDto;
+import com.euan.taskmanager.dto.CreateTaskDto;
+import com.euan.taskmanager.dto.UpdateTaskDto;
 
 @Service
 public class TaskService {

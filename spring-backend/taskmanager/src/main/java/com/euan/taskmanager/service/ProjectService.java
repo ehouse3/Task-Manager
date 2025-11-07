@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.euan.taskmanager.controller.dto.CreateProjectDto;
-import com.euan.taskmanager.controller.dto.UpdateProjectDto;
+import com.euan.taskmanager.dto.CreateProjectDto;
+import com.euan.taskmanager.dto.UpdateProjectDto;
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.ProjectRepository;

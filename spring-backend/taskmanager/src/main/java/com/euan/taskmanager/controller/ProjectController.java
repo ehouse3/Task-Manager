@@ -2,8 +2,9 @@ package com.euan.taskmanager.controller;
 
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.service.ProjectService;
-import com.euan.taskmanager.controller.dto.CreateProjectDto;
-import com.euan.taskmanager.controller.dto.UpdateProjectDto;
+import com.euan.taskmanager.dto.CreateProjectDto;
+import com.euan.taskmanager.dto.UpdateProjectDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

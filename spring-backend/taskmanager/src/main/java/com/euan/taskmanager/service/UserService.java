@@ -72,8 +72,4 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

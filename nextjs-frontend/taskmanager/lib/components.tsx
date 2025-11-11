@@ -41,6 +41,7 @@ interface TextFieldProps {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
+  name?: string;
 }
 /** Input Field to input text */
 export function TextField(props: TextFieldProps): ReactElement {
@@ -52,6 +53,7 @@ export function TextField(props: TextFieldProps): ReactElement {
       required={props.required}
       minLength={props.minLength}
       maxLength={props.maxLength}
+      name={props.name}
       type="text"
     ></input>
   );
@@ -63,6 +65,7 @@ interface PasswordFieldProps {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
+  name?: string;
 }
 /** Input Field to input passwords */
 export function PasswordField(props: PasswordFieldProps): ReactElement {
@@ -74,6 +77,7 @@ export function PasswordField(props: PasswordFieldProps): ReactElement {
       required={props.required}
       minLength={props.minLength}
       maxLength={props.maxLength}
+      name={props.name}
       type="password"
     ></input>
   );

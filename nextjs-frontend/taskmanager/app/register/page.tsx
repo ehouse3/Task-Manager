@@ -2,7 +2,7 @@
 
 import { Button, TextField, PasswordField } from "@/lib/components";
 import { register } from "@/lib/api/auth";
-import { RegisterRequest } from "@/lib/types/auth";
+import { AuthResponse, RegisterRequest } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler } from "react";
 
 export default function UserRegister() {
@@ -17,7 +17,8 @@ export default function UserRegister() {
       email: formData.get("email")?.toString() ?? "",
       password: formData.get("password")?.toString() ?? "",
     };
-    register(request);
+    const response: Promise<AuthResponse> = register(request);
+    console.log(response);
   };
 
   return (

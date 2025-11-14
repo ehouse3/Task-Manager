@@ -44,8 +44,11 @@ public class ProjectService {
         Project project = new Project();
         project.setId(null);
         project.setName(dto.getName());
+
         User user = userRepository.findById(dto.getUserId()).get();
-        project.setUser(user);
+        List<Project> projects = user.getProjects();
+        projects.add(project);
+        user.setProjects(projects);
         
         return projectRepository.save(project); 
     }
@@ -61,12 +64,7 @@ public class ProjectService {
         if (dto.getTaskIds().isPresent()) { // add more verification?
             project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
         } 
-        if (dto.getUserId().isPresent()) {
-            if (userRepository.existsById(dto.getUserId().get()) == false)
-                throw new RuntimeException("User not found");
-            User user = userRepository.findById(dto.getUserId().get()).get();
-            project.setUser(user);
-        }
+        // Add ability to change the parent user this project is under
 
         return projectRepository.save(project);
     }

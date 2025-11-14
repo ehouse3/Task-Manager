@@ -14,6 +14,6 @@ public class UpdateTaskDto {
     private Optional<String> description;
     private Optional<TaskStatus> status;
     private Optional<TaskPriority> priority;
-    private Optional<Long> projectId;
+    // private Optional<Long> projectId;
     private Optional<LocalDateTime> dueDate;
 }

@@ -39,8 +39,11 @@ public class TaskService {
         Task task = new Task();
         task.setId(null);
         task.setTitle(dto.getTitle());
+        
         Project project = projectRepository.findById(dto.getProjectId()).get();
-        task.setProject(project);
+        List<Task> tasks = project.getTasks();
+        tasks.add(task);
+        project.setTasks(tasks);
         return taskRepository.save(task);
     }
 
@@ -55,13 +58,8 @@ public class TaskService {
         if (dto.getDescription().isPresent()) task.setDescription(dto.getDescription().get());
         if (dto.getStatus().isPresent()) task.setStatus(dto.getStatus().get());
         if (dto.getPriority().isPresent()) task.setPriority(dto.getPriority().get());
-        if (dto.getProjectId().isPresent()) { 
-            if (projectRepository.existsById(dto.getProjectId().get()) == false)
-                throw new RuntimeException("Project not found");
-            Project project = projectRepository.findById(dto.getProjectId().get()).get();
-            task.setProject(project);
-        }
         if (dto.getDueDate().isPresent()) task.setDueDate(dto.getDueDate().get());
+        // Add ability to update parent project that this task is under
         return taskRepository.save(task);
     }
 

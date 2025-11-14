@@ -27,34 +27,33 @@ public class Project {
     @Column(length = 1000)
     private String description;
 
-    // User
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
+    // @ManyToOne
+    // @JoinColumn(name = "user_id", nullable = false)
+    // @JsonIgnore
+    // private User user;
 
-    @Transient
-    public Long getUserId() {
-        if (this.user != null)
-            return this.user.getId();
-        return null;
-    }
+    // @Transient
+    // public Long getUserId() {
+    //     if (this.user != null)
+    //         return this.user.getId();
+    //     return null;
+    // }
 
     // Tasks
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @Column(nullable = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
-    @JsonProperty("taskIds")
-    public List<Long> getTaskIds() {
-        if (tasks != null) {
-            List<Long> ids = new ArrayList<>(); // use array map
-            for (Task task : tasks) {
-                ids.add(task.getId());
-            }
-            return ids;
-        }
-        return null;
-    }
+    // @JsonProperty("taskIds")
+    // public List<Long> getTaskIds() {
+    //     if (tasks != null) {
+    //         List<Long> ids = new ArrayList<>(); // use array map
+    //         for (Task task : tasks) {
+    //             ids.add(task.getId());
+    //         }
+    //         return ids;
+    //     }
+    //     return null;
+    // }
 
 }

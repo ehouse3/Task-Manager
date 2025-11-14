@@ -42,17 +42,17 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskPriority priority = TaskPriority.MEDIUM;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    @JsonIgnore
-    private Project project;
+    // @ManyToOne
+    // @JoinColumn(name = "project_id", nullable = false)
+    // @JsonIgnore
+    // private Project project;
 
-    @JsonProperty("project_id")
-    public Long getProjectId() {
-        if (project != null)
-            return project.getId();
-        return null;
-    }
+    // @JsonProperty("project_id")
+    // public Long getProjectId() {
+    //     if (project != null)
+    //         return project.getId();
+    //     return null;
+    // }
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;

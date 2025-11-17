@@ -65,6 +65,14 @@ public class ProjectService {
             project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
         } 
         // Add ability to change the parent user this project is under
+        // if (dto.getTaskIds().isPresent()) {
+        //     // remove project from old user
+
+
+        //     // add project to new user
+            
+
+        // }
 
         return projectRepository.save(project);
     }

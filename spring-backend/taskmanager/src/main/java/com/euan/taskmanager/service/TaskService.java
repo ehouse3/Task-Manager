@@ -60,6 +60,15 @@ public class TaskService {
         if (dto.getPriority().isPresent()) task.setPriority(dto.getPriority().get());
         if (dto.getDueDate().isPresent()) task.setDueDate(dto.getDueDate().get());
         // Add ability to update parent project that this task is under
+        // if (dto.getProjectId().isPresent()) {
+        //     // remove task from old project
+        //     if () {
+
+        //     }
+
+        //     // assign new task to project
+        // }
+
         return taskRepository.save(task);
     }
 

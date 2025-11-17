@@ -33,19 +33,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    // Create user
-    public User createUser(User user) { // create user dto?
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setId(null);
-
-        return userRepository.save(user);
-    }
+    // createUser() is done through register() in Auth
 
     // Update user
     public User updateUser(long id, User userDetails) { // update user dto?

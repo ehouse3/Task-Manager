@@ -1,8 +1,8 @@
 package com.euan.taskmanager.controller;
 
-import com.euan.taskmanager.dto.AuthResponse;
-import com.euan.taskmanager.dto.LoginRequest;
-import com.euan.taskmanager.dto.RegisterRequest;
+import com.euan.taskmanager.dto.auth.AuthResponse;
+import com.euan.taskmanager.dto.auth.LoginRequest;
+import com.euan.taskmanager.dto.auth.RegisterRequest;
 import com.euan.taskmanager.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.euan.taskmanager.dto;
+package com.euan.taskmanager.dto.auth;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
 package com.euan.taskmanager.service;
 
-import com.euan.taskmanager.dto.AuthResponse;
-import com.euan.taskmanager.dto.LoginRequest;
-import com.euan.taskmanager.dto.RegisterRequest;
+import com.euan.taskmanager.dto.auth.AuthResponse;
+import com.euan.taskmanager.dto.auth.LoginRequest;
+import com.euan.taskmanager.dto.auth.RegisterRequest;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 import com.euan.taskmanager.utils.JwtUtil;

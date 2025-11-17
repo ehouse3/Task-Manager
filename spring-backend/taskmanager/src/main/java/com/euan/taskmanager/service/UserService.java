@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.euan.taskmanager.dto.UpdateUserDto;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
-
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // Get all users
     public List<User> getAllUsers() {
@@ -36,18 +34,26 @@ public class UserService {
     // createUser() is done through register() in Auth
 
     // Update user
-    public User updateUser(long id, User userDetails) { // update user dto?
+    public User updateUser(long id, UpdateUserDto dto) { // update user dto?
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        user.setNickName(userDetails.getNickName());
+        if (dto.getRole().isPresent())
+            user.setRole(dto.getRole().get());
+        if (dto.getUsername().isPresent())
+            user.setUsername(dto.getUsername().get());
+        if (dto.getNickName().isPresent())
+            user.setNickName(dto.getNickName().get());
+        if (dto.getEmail().isPresent())
+            user.setEmail(dto.getEmail().get());
 
-        // expand catches
-        if (!userDetails.getPassword().isEmpty() && userDetails.getPassword() != null) {
-            user.setPassword(userDetails.getPassword());
+        if (dto.getPassword().isPresent()) {
+            if (dto.getPassword().get().isEmpty()) { // valid password (len > 0)
+                user.setPassword(dto.getPassword().get());
+            }
         }
+        if (dto.getProjects().isPresent())
+            user.setProjects(dto.getProjects().get());
 
         return userRepository.save(user);
     }

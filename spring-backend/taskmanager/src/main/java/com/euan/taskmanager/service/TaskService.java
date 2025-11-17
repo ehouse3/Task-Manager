@@ -39,7 +39,7 @@ public class TaskService {
         Task task = new Task();
         task.setId(null);
         task.setTitle(dto.getTitle());
-        
+
         Project project = projectRepository.findById(dto.getProjectId()).get();
         List<Task> tasks = project.getTasks();
         tasks.add(task);
@@ -48,33 +48,29 @@ public class TaskService {
     }
 
     // Update task
-    public Task updateTask( Long id, UpdateTaskDto dto) {
+    public Task updateTask(Long id, UpdateTaskDto dto) {
         if (taskRepository.existsById(id) == false)
             throw new RuntimeException("Task not found");
 
         // Assign new data, leaving null values unchanged
         Task task = taskRepository.findById(id).get();
-        if (dto.getTitle().isPresent()) task.setTitle(dto.getTitle().get());
-        if (dto.getDescription().isPresent()) task.setDescription(dto.getDescription().get());
-        if (dto.getStatus().isPresent()) task.setStatus(dto.getStatus().get());
-        if (dto.getPriority().isPresent()) task.setPriority(dto.getPriority().get());
-        if (dto.getDueDate().isPresent()) task.setDueDate(dto.getDueDate().get());
-        // Add ability to update parent project that this task is under
-        // if (dto.getProjectId().isPresent()) {
-        //     // remove task from old project
-        //     if () {
-
-        //     }
-
-        //     // assign new task to project
-        // }
+        if (dto.getTitle().isPresent())
+            task.setTitle(dto.getTitle().get());
+        if (dto.getDescription().isPresent())
+            task.setDescription(dto.getDescription().get());
+        if (dto.getStatus().isPresent())
+            task.setStatus(dto.getStatus().get());
+        if (dto.getPriority().isPresent())
+            task.setPriority(dto.getPriority().get());
+        if (dto.getDueDate().isPresent())
+            task.setDueDate(dto.getDueDate().get());
 
         return taskRepository.save(task);
     }
 
     // Delete task
     public void deleteTask(Long id) {
-        if (taskRepository.existsById(id)) 
+        if (taskRepository.existsById(id))
             throw new RuntimeException("Task not found");
         taskRepository.deleteById(id);
     }

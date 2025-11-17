@@ -14,10 +14,9 @@ import com.euan.taskmanager.repository.ProjectRepository;
 import com.euan.taskmanager.repository.TaskRepository;
 import com.euan.taskmanager.repository.UserRepository;
 
-
 @Service
 public class ProjectService {
-    
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -49,36 +48,30 @@ public class ProjectService {
         List<Project> projects = user.getProjects();
         projects.add(project);
         user.setProjects(projects);
-        
-        return projectRepository.save(project); 
+
+        return projectRepository.save(project);
     }
 
     public Project updateProject(Long id, UpdateProjectDto dto) {
-        if (projectRepository.existsById(id) == false) 
+        if (projectRepository.existsById(id) == false)
             throw new RuntimeException("Project not found");
 
         // Assign new data, leaving null values unchanged
         Project project = projectRepository.findById(id).get();
-        if (dto.getName().isPresent()) project.setName(dto.getName().get());
-        if (dto.getDescription().isPresent()) project.setDescription(dto.getDescription().get());
+        if (dto.getName().isPresent())
+            project.setName(dto.getName().get());
+        if (dto.getDescription().isPresent())
+            project.setDescription(dto.getDescription().get());
         if (dto.getTaskIds().isPresent()) { // add more verification?
             project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
-        } 
-        // Add ability to change the parent user this project is under
-        // if (dto.getTaskIds().isPresent()) {
-        //     // remove project from old user
-
-
-        //     // add project to new user
-            
-
-        // }
+        }
 
         return projectRepository.save(project);
     }
 
     public void deleteProject(Long id) {
-        if (projectRepository.existsById(id) == false) throw new RuntimeException("Project not found");
+        if (projectRepository.existsById(id) == false)
+            throw new RuntimeException("Project not found");
         projectRepository.deleteById(id);
     }
 }

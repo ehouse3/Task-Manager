@@ -1,5 +1,6 @@
 package com.euan.taskmanager.controller;
 
+import com.euan.taskmanager.dto.UpdateUserDto;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     // Get all users
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -25,43 +26,42 @@ public class UserController {
         users.forEach(user -> user.setPassword(null));
         return ResponseEntity.ok(users);
     }
-    
+
     // Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
-            .map(user -> {
-                user.setPassword(null);  // Don't send password
-                return ResponseEntity.ok(user);
-            })
-            .orElse(ResponseEntity.notFound().build());
+                .map(user -> {
+                    user.setPassword(null); // Don't send password
+                    return ResponseEntity.ok(user);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
-    
+
     // Get user by username
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
-            .map(user -> {
-                user.setPassword(null);
-                return ResponseEntity.ok(user);
-            })
-            .orElse(ResponseEntity.notFound().build());
+                .map(user -> {
+                    user.setPassword(null);
+                    return ResponseEntity.ok(user);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // createUser() is done through register() in Auth
-    
+
     // Update user
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
         try {
-            User updatedUser = userService.updateUser(id, user);
-            // updatedUser.setPassword(null);
+            User updatedUser = userService.updateUser(id, dto);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) { // exception thrown from service
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-    
+
     // Delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {

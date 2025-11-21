@@ -8,6 +8,7 @@ import { FormEvent, FormEventHandler, useState } from "react";
 export default function UserRegister() {
   const [result, setResult] = useState<string>(""); // result of registration
 
+  // Verify field constraints
   function isValidUsername(username: string): boolean {
     if (username.length < 1) {
       return false;
@@ -43,21 +44,33 @@ export default function UserRegister() {
     };
 
     try {
-      if (!isValidUsername(request.username)) { throw new Error("invalid username"); }
-      if (!isValidEmail(request.email)) { throw new Error("invalid email"); }
-      if (!isValidPassword(request.password)) { throw new Error("invalid password"); }
-
-      const response: Promise<AuthResponse> = register(request);
-      console.log(response);
-    } catch (error) {
-      setResult("Invalid arguments");
-      console.log(error);
-    }
+      // Local field validation
+      if (!isValidUsername(request.username)) {
+        setResult("Invalid Username");
+        throw new Error("invalid username");
+      }
+      if (!isValidEmail(request.email)) {
+        setResult("Invalid Email");
+        throw new Error("invalid email");
+      }
+      if (!isValidPassword(request.password)) {
+        setResult("Invalid Password");
+        throw new Error("invalid password");
+      }
+      
+      // Catch server conflict for username or email (Expand for different errors)
+      register(request).catch((error) => {
+        setResult("Username or Email already exists");
+      });
+    } catch (error) {}
   };
 
   return (
     <div className="flex flex-col">
-      <form className="flex flex-col w-sm items-center  " onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col w-sm items-center  "
+        onSubmit={handleSubmit}
+      >
         <h1>User Registration</h1>
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />

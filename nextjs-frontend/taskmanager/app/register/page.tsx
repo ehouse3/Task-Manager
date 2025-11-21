@@ -2,7 +2,7 @@
 
 import { Button, TextField, PasswordField } from "@/lib/components";
 import { register } from "@/lib/api/auth";
-import { AuthResponse, RegisterRequest } from "@/lib/types/auth";
+import { RegisterRequest } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 
 export default function UserRegister() {
@@ -38,9 +38,9 @@ export default function UserRegister() {
     event.preventDefault();
     const formData: FormData = new FormData(event.currentTarget);
     const request: RegisterRequest = {
-      username: formData.get("username")?.toString() ?? "",
-      email: formData.get("email")?.toString() ?? "",
-      password: formData.get("password")?.toString() ?? "",
+      username: formData.get("username")?.toString() as string, // field required
+      email: formData.get("email")?.toString() as string, // field required
+      password: formData.get("password")?.toString() as string, // field required
     };
 
     try {
@@ -58,11 +58,11 @@ export default function UserRegister() {
         throw new Error("invalid password");
       }
       
-      // Catch server conflict for username or email (Expand for different errors)
-      register(request).catch((error) => {
-        setResult("Username or Email already exists");
+      
+      register(request).catch(() => { // Catch server conflict for username or email (Expand for different errors)
+        setResult("Username or email already exists");
       });
-    } catch (error) {}
+    } catch {}
   };
 
   return (

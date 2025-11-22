@@ -18,3 +18,8 @@ export interface RegisterRequest {
     email: string,
     password: string
 }
+
+// add username conflict, email conflict?
+export enum LoginResult {
+    SUCCESS, FAILED
+}

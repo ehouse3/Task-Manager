@@ -1,15 +1,18 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { login } from "@/lib/api/auth";
-import { LoginRequest } from "@/lib/types/auth";
+import { LoginRequest, LoginResult } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { useRouter } from "next/router";
 
 export default function UserLogin() {
   const [result, setResult] = useState<string>(""); // result of login
+  const auth = useAuth();
+  const router = useRouter();
 
   // Handler for submitting form. Generates reigstration request for new user and calls api
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
@@ -19,9 +22,18 @@ export default function UserLogin() {
       password: formData.get("password")?.toString() as string, // field required
     };
 
-    login(request).catch(() => { // Catch server conflict for username or email (Expand for different errors)
-      setResult("Username or password is incorrect");
-    });
+    if (auth == undefined) {
+      setResult("Login Failed");
+      return;
+    }
+    const loginResult: LoginResult = await auth.login(request);
+    if (loginResult == LoginResult.FAILED) {
+      setResult("Invalid login information");
+      return;
+    } else if (loginResult == LoginResult.SUCCESS) {
+      router.push("/home"); // utilize dynamic routing
+      return;
+    }
   };
 
   return (

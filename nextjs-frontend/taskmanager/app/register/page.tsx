@@ -1,12 +1,15 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { register } from "@/lib/api/auth";
-import { RegisterRequest } from "@/lib/types/auth";
+import { RegisterRequest, RegisterResult } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
+import { useRouter } from "next/router";
+import { useAuth } from "../auth/AuthContext";
 
 export default function UserRegister() {
   const [result, setResult] = useState<string>(""); // result of registration
+  const router = useRouter();
+  const auth = useAuth();
 
   // Verify field constraints
   function isValidUsername(username: string): boolean {
@@ -32,7 +35,7 @@ export default function UserRegister() {
   }
 
   // Handler for submitting form. Generates reigstration request for new user and calls api
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
@@ -57,11 +60,20 @@ export default function UserRegister() {
         setResult("Invalid Password");
         throw new Error("invalid password");
       }
-      
-      
-      register(request).catch(() => { // Catch server conflict for username or email (Expand for different errors)
-        setResult("Username or email already exists");
-      });
+
+      if (auth == undefined) {
+        setResult("Registration Failed");
+        return;
+      }
+
+      const registerResult: RegisterResult = await auth.register(request);
+      if (registerResult == RegisterResult.FAILED) {
+        setResult("Invalid login information");
+        return;
+      }
+      if (registerResult == RegisterResult.SUCCESS) {
+        router.push("/home"); // utilize dynamic routing
+      }
     } catch {}
   };
 

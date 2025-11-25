@@ -3,8 +3,8 @@
 import { Button, TextField, PasswordField } from "@/lib/components";
 import { LoginRequest, LoginResult } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
-import { useRouter } from "next/router";
 
 export default function UserLogin() {
   const [result, setResult] = useState<string>(""); // result of login

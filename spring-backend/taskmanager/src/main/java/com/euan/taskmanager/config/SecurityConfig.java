@@ -18,24 +18,24 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Enable CORS support in Spring Security so the WebMvc CORS config is applied
-            .cors(withDefaults())
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth // Defining endpoints that bypass auth
-                .requestMatchers("/api/auth/**").permitAll()  // Public endpoints
-                .requestMatchers("/api/test/**").permitAll()  // Test endpoints
-                .anyRequest().authenticated()                  // Everything else needs auth
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        
+                // Enable CORS support in Spring Security so the WebMvc CORS config is applied
+                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable()) // JWT does not need csrf protection
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth // Defining endpoints that bypass auth
+                        .requestMatchers("/api/auth/**").permitAll() // Public endpoints
+                        .requestMatchers("/api/test/**").permitAll() // Test endpoints
+                        .anyRequest().authenticated() // Everything else needs auth
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

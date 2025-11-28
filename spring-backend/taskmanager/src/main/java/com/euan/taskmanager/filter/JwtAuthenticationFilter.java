@@ -23,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    // 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -30,24 +31,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Get token from Authorization header
         String authHeader = request.getHeader("Authorization");
-
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // Retrieve token
-
-            // Validate token
-            if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.getUsernameFromToken(token);
-
-                // Set authentication in context
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
-                        null, new ArrayList<>());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Assign authentication
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        
+        // Catch tokenless authorization
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response); // Filter handles unauthorization
+            return;
         }
 
-        filterChain.doFilter(request, response);
+        String token = authHeader.substring(7); // Retrieve token
+
+        // Validate token
+        if (jwtUtil.validateToken(token)) {
+            String username = jwtUtil.getUsernameFromToken(token);
+
+            // Set authentication in context
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
+                    null, new ArrayList<>());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            // Assign authentication
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        filterChain.doFilter(request, response); // Filter handles unauthorization
     }
 }

@@ -39,14 +39,14 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // Require Auth for all other endpoints
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint()));
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedAuthenticationEntryPoint()));
 
         return http.build();
     }
 
     // Entry point for handling unauthorized errors
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
+    public AuthenticationEntryPoint unauthorizedAuthenticationEntryPoint() {
         return (request, response, exception) -> {
             // Build http unauthorized response
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

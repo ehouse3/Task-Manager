@@ -5,8 +5,6 @@ import { getAllUsers } from "@/lib/api/users";
 import { User } from "@/lib/types/user";
 
 export default function Home() {
-    // const [users, setUsers] = useEffect<User[]>();
-
     const [users, setUsers] = useState<User[] | null>(null);
     useEffect(() => {
         async function fetchData() {
@@ -16,7 +14,7 @@ export default function Home() {
         }
         fetchData();
     }, []);
-    // const users: User[] = await getAllUsers();
+    
     return (
         <div>
             <h1>Home Page</h1>

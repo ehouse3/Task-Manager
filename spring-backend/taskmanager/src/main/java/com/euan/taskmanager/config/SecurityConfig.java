@@ -44,7 +44,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Entry point for handling unauthorized errors
+    // Entry point for handling unauthorized jwt errors
     @Bean
     public AuthenticationEntryPoint unauthorizedAuthenticationEntryPoint() {
         return (request, response, exception) -> {

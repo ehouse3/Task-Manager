@@ -24,11 +24,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
+
+        String requestPath = request.getRequestURI();
+
+        // Bypass token verification for public endpoints
+        if (requestPath.startsWith("/api/auth/") || requestPath.startsWith("/api/test/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // Get token from Authorization header
         String authHeader = request.getHeader("Authorization");

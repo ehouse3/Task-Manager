@@ -8,6 +8,15 @@ cd .\spring-backend\taskmanager\; .\mvnw spring-boot:run;
 
 <!-- curl.exe -i -X POST "http://localhost:8080" -->
 
+# Spring Debugging
+
+create logger for myservice:
+private static final Logger logger = LoggerFactory.getLogger(myservice.class);
+
+then use:
+log.debug("");
+
+
 # Postgres
 
 # Composing docker for spring and database

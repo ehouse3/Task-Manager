@@ -15,8 +15,10 @@ export const apiClient = axios.create({
 });
 
 // Attach token to all requests. Backend will verify token
-apiClient.interceptors.request.use((config) => {
-  const token: string | null = localStorage.getItem("token");
+apiClient.interceptors.request.use(async (config) => {
+  // Exctract token from cookies
+  const cookieListItem: CookieListItem | null = await cookieStore.get('token'); 
+  const token: string | undefined = cookieListItem?.value; 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

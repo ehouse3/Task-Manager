@@ -10,6 +10,7 @@ import {
   RegisterResult,
 } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
+import { cookies } from "next/headers";
 
 interface AuthContextType {
   user: User | null;
@@ -45,9 +46,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: data.email,
       };
 
-      // assign token for user validation
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(user));
+      // assign token for user validation in cookies
+      cookieStore.set({
+        name: "token",
+        value: data.token
+      });
+      cookieStore.set({
+        name: "user",
+        value: JSON.stringify(user)
+      });
 
       setToken(data.token);
       setUser(user);
@@ -69,12 +76,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: data.email,
       };
 
-      // assign token for user validation
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      setToken(data.token);
-      setUser(user);
+      // assign token for user validation in cookies
+      cookieStore.set({
+        name: "token",
+        value: data.token,
+      });
+      cookieStore.set({
+        name: "user",
+        value: JSON.stringify(user)
+      });
 
       return LoginResult.SUCCESS;
     } catch (error) {
@@ -84,10 +94,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   /** Removes token and user from local storage */
   const authLogout = () => {
+    // Remove all user & token information
     setToken(null);
     setUser(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    cookieStore.delete('token');
+    cookieStore.delete('user');
   };
 
   const authContextProps = {

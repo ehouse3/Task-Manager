@@ -10,7 +10,6 @@ import {
   RegisterResult,
 } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
-import { cookies } from "next/headers";
 
 interface AuthContextType {
   user: User | null;

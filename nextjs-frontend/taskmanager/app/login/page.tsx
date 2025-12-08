@@ -26,12 +26,15 @@ export default function UserLogin() {
       setResult("Login Failed");
       return;
     }
+
+    // Handle page redirection
     const loginResult: LoginResult = await auth.login(request);
     if (loginResult == LoginResult.FAILED) {
       setResult("Invalid login information");
       return;
-    } else if (loginResult == LoginResult.SUCCESS) {
-      router.push("/home"); // utilize dynamic routing
+    } 
+    if (loginResult == LoginResult.SUCCESS) {
+      router.push("/dashboard"); // utilize dynamic routing
       return;
     }
   };

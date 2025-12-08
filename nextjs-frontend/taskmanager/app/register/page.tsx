@@ -66,13 +66,14 @@ export default function UserRegister() {
         return;
       }
 
+      // Handle page redirections
       const registerResult: RegisterResult = await auth.register(request);
       if (registerResult == RegisterResult.FAILED) {
         setResult("Invalid login information");
         return;
       }
       if (registerResult == RegisterResult.SUCCESS) {
-        router.push("/home"); // utilize dynamic routing
+        router.push("/dashboard"); // utilize dynamic routing
       }
     } catch {}
   };

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getAllUsers } from "@/lib/api/users";
 import { User } from "@/lib/types/user";
 
-export default function Home() {
+export default function UserDashboard() {
     const [users, setUsers] = useState<User[] | null>(null);
     useEffect(() => {
         async function fetchData() {

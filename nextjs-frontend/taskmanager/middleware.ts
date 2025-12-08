@@ -35,5 +35,5 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     // Matcher to apply middleware onto 
-    matcher: ['/login', '/register', '/home', '/'],
+    matcher: ['/login', '/register', '/dashboard', '/'],
 }

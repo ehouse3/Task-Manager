@@ -48,11 +48,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // assign token for user validation in cookies
       cookieStore.set({
         name: "token",
-        value: data.token
+        value: data.token,
       });
       cookieStore.set({
         name: "user",
-        value: JSON.stringify(user)
+        value: JSON.stringify(user),
       });
 
       setToken(data.token);
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       cookieStore.set({
         name: "user",
-        value: JSON.stringify(user)
+        value: JSON.stringify(user),
       });
 
       return LoginResult.SUCCESS;
@@ -96,8 +96,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Remove all user & token information
     setToken(null);
     setUser(null);
-    cookieStore.delete('token');
-    cookieStore.delete('user');
+    cookieStore.delete("token");
+    cookieStore.delete("user");
   };
 
   const authContextProps = {

@@ -17,8 +17,8 @@ export const apiClient = axios.create({
 // Attach token to all requests. Backend will verify token
 apiClient.interceptors.request.use(async (config) => {
   // Exctract token from cookies
-  const cookieListItem: CookieListItem | null = await cookieStore.get('token'); 
-  const token: string | undefined = cookieListItem?.value; 
+  const cookieListItem: CookieListItem | null = await cookieStore.get("token");
+  const token: string | undefined = cookieListItem?.value;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -30,7 +30,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      redirect('/login');
+      redirect("/login");
     }
     return Promise.reject(error);
   }

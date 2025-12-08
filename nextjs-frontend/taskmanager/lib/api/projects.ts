@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { Project, CreateProjectDto, UpdateProjectDto } from "../types/project"
+import { Project, CreateProjectDto, UpdateProjectDto } from "../types/project";
 
 export const getAllProjects = async (): Promise<Project[]> => {
   const response = await apiClient.get("/projects");
@@ -14,7 +14,6 @@ export const getProjectById = async (id: number): Promise<Project> => {
 export const createProject = async (
   project: CreateProjectDto
 ): Promise<Project> => {
-  console.log("api new project:", project);
   const response = await apiClient.post("/projects", project);
   return response.data;
 };

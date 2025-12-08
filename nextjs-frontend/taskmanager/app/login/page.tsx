@@ -32,7 +32,7 @@ export default function UserLogin() {
     if (loginResult == LoginResult.FAILED) {
       setResult("Invalid login information");
       return;
-    } 
+    }
     if (loginResult == LoginResult.SUCCESS) {
       router.push("/dashboard"); // utilize dynamic routing
       return;

@@ -3,7 +3,7 @@ export interface Project {
   name: string;
   description: string;
   ownerId: number;
-  taskId: number; 
+  taskId: number;
 }
 
 export interface CreateProjectDto {

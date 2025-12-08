@@ -8,7 +8,8 @@ export interface User {
 }
 
 export enum UserRole {
-  USER, ADMIN
+  USER,
+  ADMIN,
 }
 
 export interface CreateUserDto {

@@ -3,7 +3,7 @@
 import { Button, TextField, PasswordField } from "@/lib/components";
 import { RegisterRequest, RegisterResult } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
 
 export default function UserRegister() {

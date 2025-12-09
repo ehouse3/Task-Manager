@@ -10,7 +10,7 @@ interface ButtonProps {
 export function Button(props: ButtonProps): ReactElement {
   return (
     <button
-      className="mx-1 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      className="mx-1 mb-4 px-4 py-2 bg-button text-text-light rounded hover:bg-button-hover cursor-pointer"
       onClick={props.onClick}
       type={props.type}
     >
@@ -27,7 +27,7 @@ interface NavigateProps {
 export function Navigate(props: NavigateProps): ReactElement {
   return (
     <Link
-      className="mx-1 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      className="mx-1 mb-4 px-4 py-1.5 bg-button text-center text-xl text-text-light rounded hover:bg-button-hover "
       href={props.href}
     >
       {props.innerText ?? ""}
@@ -47,7 +47,7 @@ interface TextFieldProps {
 export function TextField(props: TextFieldProps): ReactElement {
   return (
     <input
-      className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-black rounded hover:bg-gray-400"
+      className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"
       placeholder={props.placeHolder}
       onChange={props.onChange}
       required={props.required}
@@ -71,7 +71,7 @@ interface PasswordFieldProps {
 export function PasswordField(props: PasswordFieldProps): ReactElement {
   return (
     <input
-      className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-black rounded hover:bg-gray-400"
+      className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"
       placeholder={props.placeHolder}
       onChange={props.onChange}
       required={props.required}

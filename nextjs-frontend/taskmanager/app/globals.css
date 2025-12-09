@@ -1,15 +1,40 @@
 @import "tailwindcss";
 
+/* 
+#E8E9EB white
+#313638 black
+
+#F5D0C5 light light brown
+#D69F7E light brown
+#774936 brown
+#3C0000 dark red brown
+#3c1e00 dark brown
+*/
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #ebebe8;
+  --foreground: #D69F7E;
+  
+  --button: #774936;
+  --button-hover: #985f46;
+
+  --text-dark: #313638;
+  --text-light: #E8E9EB;
+
+  --title: #3c1500;
 }
 
-@theme inline {
+@theme {
+  --color-text-dark: var(--text-dark);
+  --color-text-light: var(--text-light);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-button: var(--button);
+  --color-button-hover: var(--button-hover);
+
+  --color-title: var(--title);
+
 }
 
 h1 {
@@ -26,6 +51,7 @@ h3 {
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-dark);
+  font-weight: 500;
   font-family: Arial, Helvetica, sans-serif;
 }

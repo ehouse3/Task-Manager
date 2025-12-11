@@ -10,7 +10,7 @@ interface ButtonProps {
 export function Button(props: ButtonProps): ReactElement {
   return (
     <button
-      className="mx-1 mb-4 px-4 py-2 bg-button text-text-light rounded hover:bg-button-hover cursor-pointer"
+      className="mx-1 mb-4 px-4 py-2 bg-button text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
       onClick={props.onClick}
       type={props.type}
     >

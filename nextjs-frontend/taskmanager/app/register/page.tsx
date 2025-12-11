@@ -66,6 +66,10 @@ export default function UserRegister() {
         return;
       }
 
+      // Awaiting server response
+      setResult("");
+      // set loading
+
       // Handle page redirections
       const registerResult: RegisterResult = await auth.register(request);
       if (registerResult == RegisterResult.FAILED) {
@@ -79,12 +83,12 @@ export default function UserRegister() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center p-10 my-30 bg-foreground">
+      <h1>User Registration</h1>
       <form
-        className="flex flex-col w-sm items-center  "
+        className="flex flex-col w-sm items-center"
         onSubmit={handleSubmit}
       >
-        <h1>User Registration</h1>
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />
         <PasswordField placeHolder="Password" required={true} name="password" />

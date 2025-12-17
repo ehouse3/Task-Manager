@@ -19,14 +19,14 @@ export interface RegisterRequest {
   password: string;
 }
 
-// add more descriptors for login results
-export enum LoginResult {
-  FAILED,
-  SUCCESS,
-}
+// // add more descriptors for login results
+// export enum LoginResult {
+//   FAILED,
+//   SUCCESS,
+// }
 
-// add username conflict and email conflict?
-export enum RegisterResult {
-  FAILED,
-  SUCCESS,
-}
+// // add username conflict and email conflict?
+// export enum RegisterResult {
+//   FAILED,
+//   SUCCESS,
+// }

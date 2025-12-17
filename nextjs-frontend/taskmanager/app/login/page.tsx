@@ -1,10 +1,11 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { LoginRequest, LoginResult } from "@/lib/types/auth";
+import { LoginRequest} from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
+import { User } from "@/lib/types/user";
 
 export default function UserLogin() {
   const [result, setResult] = useState<string>(""); // result of login
@@ -28,15 +29,13 @@ export default function UserLogin() {
     }
 
     // Handle page redirection
-    const loginResult: LoginResult = await auth.login(request);
-    if (loginResult == LoginResult.FAILED) {
+    const user: User | null = await auth.login(request);
+    if (user == null) {
       setResult("Invalid login information");
       return;
     }
-    if (loginResult == LoginResult.SUCCESS) {
-      router.push("/dashboard"); // utilize dynamic routing
-      return;
-    }
+    router.push(`/${user.id}`); // utilize dynamic routing
+    return;
   };
 
   return (

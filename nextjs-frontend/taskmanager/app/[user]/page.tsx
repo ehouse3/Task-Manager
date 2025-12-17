@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { getAllUsers } from "@/lib/api/users";
 import { User } from "@/lib/types/user";
 
-export default function UserDashboard() {
+export default function UserDashboard({ params }: { params: Promise<{ user: User }> }) {
+
+  const { user } = use(params); 
+  console.log(user);
+
   const [users, setUsers] = useState<User[] | null>(null);
   useEffect(() => {
     async function fetchData() {

@@ -5,17 +5,17 @@ import { User } from "@/lib/types/user";
 import {
   AuthResponse,
   LoginRequest,
-  LoginResult,
+  // LoginResult,
   RegisterRequest,
-  RegisterResult,
+  // RegisterResult,
 } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (request: LoginRequest) => Promise<LoginResult>;
-  register: (request: RegisterRequest) => Promise<RegisterResult>;
+  login: (request: LoginRequest) => Promise<User | null>;
+  register: (request: RegisterRequest) => Promise<User | null>;
   logout: () => void;
 }
 
@@ -35,8 +35,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   /** On valid registration, assign new token and user in local storage, returning RegisterResult */
   const authRegister = async (
     request: RegisterRequest
-  ): Promise<RegisterResult> => {
+  ): Promise<User | null> => {
     try {
+      // Fetch user with login request
       const data: AuthResponse = await register(request);
       const user: User = {
         id: data.userId,
@@ -58,15 +59,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(data.token);
       setUser(user);
 
-      return RegisterResult.SUCCESS;
+      return user;
     } catch (error) {
-      return RegisterResult.FAILED;
+      return null;
     }
   };
 
   /** On valid login, assigns token and user in local storage, returning LoginResult */
-  const authLogin = async (request: LoginRequest): Promise<LoginResult> => {
+  const authLogin = async (request: LoginRequest): Promise<User | null> => {
     try {
+      // Fetch user with login request
       const data: AuthResponse = await login(request);
       const user: User = {
         id: data.userId,
@@ -85,9 +87,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         value: JSON.stringify(user),
       });
 
-      return LoginResult.SUCCESS;
+      return user;
     } catch (error) {
-      return LoginResult.FAILED;
+      return null;
     }
   };
 

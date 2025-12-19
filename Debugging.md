@@ -4,7 +4,8 @@ Spring backend and postgresql db are both inside docker
 
 # Spring
 
-cd .\spring-backend\taskmanager\; .\mvnw spring-boot:run;
+cd .\spring-backend\taskmanager\; docker-compose build app
+docker-compose up
 
 <!-- curl.exe -i -X POST "http://localhost:8080" -->
 

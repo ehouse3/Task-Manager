@@ -2,13 +2,7 @@
 
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { User } from "@/lib/types/user";
-import {
-  AuthResponse,
-  LoginRequest,
-  // LoginResult,
-  RegisterRequest,
-  // RegisterResult,
-} from "@/lib/types/auth";
+import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
 
 interface AuthContextType {
@@ -86,6 +80,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         name: "user",
         value: JSON.stringify(user),
       });
+
+      setToken(data.token);
+      setUser(user);
 
       return user;
     } catch (error) {

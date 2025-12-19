@@ -28,13 +28,17 @@ export default function UserLogin() {
       return;
     }
 
+    // Awaiting server response
+    setResult("");
+    // set loading
+
     // Handle page redirection
     const user: User | null = await auth.login(request);
     if (user == null) {
       setResult("Invalid login information");
       return;
     }
-    router.push(`/${user.id}`); // utilize dynamic routing
+    router.push(`/${user.username}`);
     return;
   };
 

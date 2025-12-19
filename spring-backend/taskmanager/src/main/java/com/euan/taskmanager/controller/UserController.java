@@ -18,27 +18,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Get all users
+    /** Get request to get all users */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        // Don't send passwords
         users.forEach(user -> user.setPassword(null));
         return ResponseEntity.ok(users);
     }
 
-    // Get user by ID
+    /** Get request to get user by user ID */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
                 .map(user -> {
-                    user.setPassword(null); // Don't send password
+                    user.setPassword(null);
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get user by username
+    /** Get request to get user by username */
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
@@ -49,26 +48,24 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // createUser() is done through register() in Auth
-
-    // Update user
+    /** Put request to update user by user ID */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
         try {
             User updatedUser = userService.updateUser(id, dto);
             return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) { // exception thrown from service
+        } catch (RuntimeException e) { // Exception thrown from service
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    // Delete user
+    /** Delete request to delete user by user ID */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) { // exception thrown from service
+        } catch (RuntimeException e) { // Exception thrown from service
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

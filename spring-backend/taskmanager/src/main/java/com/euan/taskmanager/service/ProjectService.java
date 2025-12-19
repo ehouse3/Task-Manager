@@ -30,11 +30,12 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    // Get user by ID
+    /** Get project by project ID */
     public Optional<Project> getProjectById(Long id) {
         return projectRepository.findById(id);
     }
 
+    /** Create project */
     public Project createProject(CreateProjectDto dto) {
         if (userRepository.existsById(dto.getUserId()) == false) {
             throw new RuntimeException("Project Owner Not Found");
@@ -52,6 +53,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    /** Update project by project ID */
     public Project updateProject(Long id, UpdateProjectDto dto) {
         if (projectRepository.existsById(id) == false)
             throw new RuntimeException("Project not found");
@@ -69,6 +71,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    /** Delete projecy by project ID */
     public void deleteProject(Long id) {
         if (projectRepository.existsById(id) == false)
             throw new RuntimeException("Project not found");

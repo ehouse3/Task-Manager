@@ -16,24 +16,24 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Get all users
+    /** Get all users */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Get user by ID
+    /** Get user by user ID */
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Get user by username
+    /** Get user by username */
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     // createUser() is done through register() in Auth
 
-    // Update user
+    /** Update user by user ID */
     public User updateUser(long id, UpdateUserDto dto) { // update user dto?
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -58,7 +58,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Delete user
+    /** Delete user by user ID */
     public void deleteUser(long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("User not found");

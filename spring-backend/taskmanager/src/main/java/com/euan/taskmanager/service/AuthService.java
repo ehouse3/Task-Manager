@@ -23,7 +23,7 @@ public class AuthService {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Register new user
+    /** Register new user */
     public AuthResponse register(RegisterRequest request) {
         // Check if username exists
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -55,7 +55,7 @@ public class AuthService {
                 savedUser.getRole());
     }
 
-    // Login user
+    /** Login user */
     public AuthResponse login(LoginRequest request) {
         // Find user by username
         User user = userRepository.findByUsername(request.getUsername())

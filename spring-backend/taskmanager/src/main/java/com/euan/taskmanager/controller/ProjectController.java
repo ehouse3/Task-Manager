@@ -20,14 +20,14 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    // Get all projects
+    /** Get request to get all projects */
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
 
-    // Get project by ID
+    /** Get request to get project by project ID */
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id)
@@ -37,7 +37,7 @@ public class ProjectController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Create project
+    /** Post request to create new project */
     @PostMapping
     public ResponseEntity<?> createProject(@RequestBody CreateProjectDto dto) {
         try {
@@ -48,7 +48,7 @@ public class ProjectController {
         }
     }
 
-    // Update Project
+    /** Put request to update project by project ID */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody UpdateProjectDto dto) {
         try {
@@ -60,7 +60,7 @@ public class ProjectController {
 
     }
 
-    // Delete Project
+    /** Delete request to delete project by project ID */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         try {

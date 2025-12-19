@@ -22,17 +22,17 @@ public class TaskService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    // Get all tasks
+    /** Get all tasks */
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
-    // Get task by ID
+    /** Get Task by task ID */
     public Optional<Task> getTaskById(Long id) {
         return taskRepository.findById(id);
     }
 
-    // Create task
+    /** Create task */
     public Task createTask(CreateTaskDto dto) {
         if (projectRepository.existsById(dto.getProjectId()) == false)
             throw new RuntimeException("Project not found");
@@ -47,7 +47,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    // Update task
+    /** Update task by task ID */
     public Task updateTask(Long id, UpdateTaskDto dto) {
         if (taskRepository.existsById(id) == false)
             throw new RuntimeException("Task not found");
@@ -68,7 +68,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    // Delete task
+    /** Delete task by task ID */
     public void deleteTask(Long id) {
         if (taskRepository.existsById(id))
             throw new RuntimeException("Task not found");

@@ -17,6 +17,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    /** Register user */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         try {
@@ -27,6 +28,7 @@ public class AuthController {
         }
     }
 
+    /** Login user */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         try {

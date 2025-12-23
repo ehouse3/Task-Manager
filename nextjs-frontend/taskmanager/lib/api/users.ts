@@ -1,5 +1,6 @@
 import { apiClient } from "./client";
 import { User, CreateUserDto, UpdateUserDto } from "../types/user";
+import { Project } from "../types/project";
 
 // Get all users
 export const getAllUsers = async (): Promise<User[]> => {
@@ -12,6 +13,11 @@ export const getUserById = async (id: number): Promise<User> => {
   const response = await apiClient.get(`/users/${id}`);
   return response.data;
 };
+
+export const getProjectByUserId = async (id: number): Promise<Project[]> => {
+  const response = await apiClient.get(`/users/projects/${id}`);
+  return response.data;
+}
 
 // Create new user
 export const createUser = async (user: CreateUserDto): Promise<User> => {

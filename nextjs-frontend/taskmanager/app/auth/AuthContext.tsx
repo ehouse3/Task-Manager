@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import { User } from "@/lib/types/user";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
@@ -8,6 +8,7 @@ import { login, register } from "@/lib/api/auth";
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  isLoading: boolean;
   login: (request: LoginRequest) => Promise<User | null>;
   register: (request: RegisterRequest) => Promise<User | null>;
   logout: () => void;
@@ -25,6 +26,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // States for context type
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // improve
+
+  /** Initialize auth from cookies on mount */
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        // Try to get user and token from cookies
+        const tokenCookie: CookieListItem | null = await cookieStore.get("token");
+        const userCookie: CookieListItem | null = await cookieStore.get("user");
+
+        if (tokenCookie && userCookie && userCookie.value && tokenCookie.value) {
+          const user: User = JSON.parse(userCookie.value);
+          const token: string = tokenCookie.value;
+          setToken(token);
+          setUser(user);
+        }
+      } catch (error) {
+        console.error("Failed to initialize auth from cookies:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   /** On valid registration, assign new token and user in local storage, returning RegisterResult */
   const authRegister = async (
@@ -103,6 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user: user,
     token: token,
     login: authLogin,
+    isLoading: isLoading,
     register: authRegister,
     logout: authLogout,
   };

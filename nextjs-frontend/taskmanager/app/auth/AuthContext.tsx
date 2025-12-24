@@ -26,13 +26,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // States for context type
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // improve
+  const [isLoading, setIsLoading] = useState<boolean>(true); // improve so use auth initializes the user and token state
 
   /** Initialize auth from cookies on mount */
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Try to get user and token from cookies
+        // Retrieve tokens and users from cookies
         const tokenCookie: CookieListItem | null = await cookieStore.get("token");
         const userCookie: CookieListItem | null = await cookieStore.get("user");
 

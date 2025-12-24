@@ -1,5 +1,6 @@
 package com.euan.taskmanager.service;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.euan.taskmanager.dto.UpdateUserDto;
+import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 
@@ -64,6 +66,14 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
         userRepository.deleteById(id);
+    }
+
+    /** Get all projects for user by user ID */
+    public List<Project> getProjectsByUserId(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getProjects();
     }
 
 }

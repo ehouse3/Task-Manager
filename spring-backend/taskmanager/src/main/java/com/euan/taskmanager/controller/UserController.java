@@ -1,10 +1,12 @@
 package com.euan.taskmanager.controller;
 
 import com.euan.taskmanager.dto.UpdateUserDto;
+import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,18 @@ public class UserController {
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /** Get request to get projects by user Id */
+    @GetMapping("/projects/{id}")
+    public ResponseEntity<?> getProjectsByUserId(@PathVariable Long id) {
+        try {    
+            List<Project> projects =  userService.getProjectsByUserId(id);
+            return ResponseEntity.ok(projects);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    
     }
 
     /** Put request to update user by user ID */

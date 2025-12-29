@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   description: string;
   ownerId: number;
+  userId: number;
   taskId: number;
 }
 
@@ -11,6 +12,7 @@ export interface CreateProjectDto {
   description?: string;
   ownerId: number;
   taskId: number; // convert to array
+  userId: number;
 }
 
 export interface UpdateProjectDto {

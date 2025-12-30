@@ -2,9 +2,10 @@
 export interface User {
   id: number;
   username: string;
-  userRole: UserRole;
+  role: UserRole;
   email: string;
   nickname?: string;
+  projectIds?: number[];
 }
 
 export enum UserRole {
@@ -12,15 +13,11 @@ export enum UserRole {
   ADMIN,
 }
 
-export interface CreateUserDto {
-  username: string;
-  email: string;
-  password: string;
-}
-
 export interface UpdateUserDto {
   username?: string;
+  role?: UserRole;
   email?: string;
   password?: string;
   nickname?: string;
+  projectIds?: number[];
 }

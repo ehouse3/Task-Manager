@@ -5,7 +5,6 @@ export interface Task {
   status: "TODO" | "IN_PROGRESS" | "DONE";
   priority: "LOW" | "MEDIUM" | "HIGH";
   projectId: number;
-  assignedToId?: number;
   dueDate?: string;
 }
 
@@ -15,7 +14,6 @@ export interface CreateTaskDto {
   status?: "TODO" | "IN_PROGRESS" | "DONE";
   priority?: "LOW" | "MEDIUM" | "HIGH";
   projectId: number;
-  assignedToId?: number;
   dueDate?: string;
 }
 
@@ -24,7 +22,6 @@ export interface UpdateTaskDto {
   description?: string;
   status?: "TODO" | "IN_PROGRESS" | "DONE";
   priority?: "LOW" | "MEDIUM" | "HIGH";
-  projectId?: number;
-  assignedToId?: number;
+  // projectId?: number; // Not yet possible with updateTask in backend
   dueDate?: string;
 }

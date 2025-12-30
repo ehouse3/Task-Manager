@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { User, CreateUserDto, UpdateUserDto } from "../types/user";
+import { User } from "../types/user";
 import { Project } from "../types/project";
 
 // Get all users
@@ -18,22 +18,6 @@ export const getProjectByUserId = async (id: number): Promise<Project[]> => {
   const response = await apiClient.get(`/users/projects/${id}`);
   return response.data;
 }
-
-// Create new user
-export const createUser = async (user: CreateUserDto): Promise<User> => {
-  // deprecated, go through auth.ts instead
-  const response = await apiClient.post("/users", user);
-  return response.data;
-};
-
-// Update user
-export const updateUser = async (
-  id: number,
-  user: UpdateUserDto
-): Promise<User> => {
-  const response = await apiClient.put(`/users/${id}`, user);
-  return response.data;
-};
 
 // Delete user
 export const deleteUser = async (id: number): Promise<void> => {

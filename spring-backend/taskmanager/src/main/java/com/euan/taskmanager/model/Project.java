@@ -20,7 +20,7 @@ public class Project {
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String description;
 
     // Tasks

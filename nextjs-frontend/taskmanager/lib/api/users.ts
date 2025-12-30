@@ -14,7 +14,7 @@ export const getUserById = async (id: number): Promise<User> => {
   return response.data;
 };
 
-export const getProjectByUserId = async (id: number): Promise<Project[]> => {
+export const getProjectsByUserId = async (id: number): Promise<Project[]> => {
   const response = await apiClient.get(`/users/projects/${id}`);
   return response.data;
 }

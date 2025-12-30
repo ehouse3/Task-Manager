@@ -6,4 +6,5 @@ import lombok.Data;
 public class CreateProjectDto {
     private String name;
     private Long userId;
+    // include tasks
 }

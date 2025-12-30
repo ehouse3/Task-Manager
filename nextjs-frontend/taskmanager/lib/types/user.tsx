@@ -1,3 +1,5 @@
+import { Project } from "./project";
+
 // Define User type matching backend entity
 export interface User {
   id: number;
@@ -5,7 +7,7 @@ export interface User {
   role: UserRole;
   email: string;
   nickname?: string;
-  projectIds?: number[];
+  projects?: Project[];
 }
 
 export enum UserRole {
@@ -19,5 +21,5 @@ export interface UpdateUserDto {
   email?: string;
   password?: string;
   nickname?: string;
-  projectIds?: number[];
+  projecs?: number[];
 }

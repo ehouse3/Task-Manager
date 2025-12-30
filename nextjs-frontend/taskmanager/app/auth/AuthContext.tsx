@@ -4,6 +4,7 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 import { User } from "@/lib/types/user";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
+import { getUserById } from "@/lib/api/users";
 
 interface AuthContextType {
   user: User | null;
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // States for context type
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // improve so use auth initializes the user and token state
+  const [isLoading, setIsLoading] = useState<boolean>(true); // improve so useAuth() initializes the user and token state
 
   /** Initialize auth from cookies on mount */
   useEffect(() => {
@@ -52,19 +53,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
-  /** On valid registration, assign new token and user in local storage, returning RegisterResult */
+  /** On valid registration, assign new token and user in cookies, returning RegisterResult */
   const authRegister = async (
     request: RegisterRequest
   ): Promise<User | null> => {
     try {
       // Fetch user with login request
       const data: AuthResponse = await register(request);
-      const user: User = {
-        id: data.userId,
-        username: data.username,
-        userRole: data.role,
-        email: data.email,
-      };
+
+      const user: User = await getUserById(data.userId);
 
       // assign token for user validation in cookies
       cookieStore.set({
@@ -90,12 +87,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Fetch user with login request
       const data: AuthResponse = await login(request);
-      const user: User = {
-        id: data.userId,
-        username: data.username,
-        userRole: data.role,
-        email: data.email,
-      };
+      
+      const user: User = await getUserById(data.userId);
 
       // assign token for user validation in cookies
       cookieStore.set({

@@ -49,10 +49,7 @@ public class AuthService {
 
         return new AuthResponse(
                 token,
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail(),
-                savedUser.getRole());
+                savedUser.getId());
     }
 
     /** Login user */
@@ -71,9 +68,6 @@ public class AuthService {
 
         return new AuthResponse(
                 token,
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole());
+                user.getId());
     }
 }

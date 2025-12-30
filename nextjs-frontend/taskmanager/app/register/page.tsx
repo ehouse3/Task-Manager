@@ -10,7 +10,7 @@ import { User } from "@/lib/types/user";
 export default function UserRegister() {
   const [result, setResult] = useState<string>(""); // result of registration
   const router = useRouter();
-  const auth = useAuth();
+  const auth = useAuth(); // Assigning auth user
 
   // Verify field constraints
   function isValidUsername(username: string): boolean {
@@ -77,7 +77,7 @@ export default function UserRegister() {
         setResult("Invalid login information");
         return;
       }
-      router.push(`/${user.id}`); // utilize dynamic routing
+      router.push(`/${user.username}`); 
     } catch {}
   };
 

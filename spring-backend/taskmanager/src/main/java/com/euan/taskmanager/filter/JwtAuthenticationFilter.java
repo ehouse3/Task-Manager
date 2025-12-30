@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        logger.debug("LOGGER TEST");
+        // logger.debug("LOGGER TEST");
         
         String requestPath = request.getRequestURI();
 

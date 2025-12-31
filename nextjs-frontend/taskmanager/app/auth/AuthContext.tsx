@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { User } from "@/lib/types/user";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/types/auth";
 import { login, register } from "@/lib/api/auth";
@@ -34,14 +40,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       try {
         // Retrieve tokens and users from cookies
-        const tokenCookie: CookieListItem | null = await cookieStore.get("token");
+        const tokenCookie: CookieListItem | null = await cookieStore.get(
+          "token"
+        );
         const userCookie: CookieListItem | null = await cookieStore.get("user");
 
-        if (tokenCookie && userCookie && userCookie.value && tokenCookie.value) {
-          const user: User = JSON.parse(userCookie.value);
-          const token: string = tokenCookie.value;
-          setToken(token);
-          setUser(user);
+        // Assign state if user or tokens in cookies
+        if (tokenCookie && userCookie) {
+          if (userCookie.value && tokenCookie.value) {
+            const user: User = JSON.parse(userCookie.value);
+            const token: string = tokenCookie.value;
+            setToken(token);
+            setUser(user);
+          }
         }
       } catch (error) {
         console.error("Failed to initialize auth from cookies:", error);
@@ -82,12 +93,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  /** On valid login, assigns token and user in local storage, returning LoginResult */
+  /** On valid login, assigns token and user in cookies, returning LoginResult */
   const authLogin = async (request: LoginRequest): Promise<User | null> => {
     try {
       // Fetch user with login request
       const data: AuthResponse = await login(request);
-      
+
       const user: User = await getUserById(data.userId);
 
       // assign token for user validation in cookies
@@ -109,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  /** Removes token and user from local storage */
+  /** Removes token and user from cookies */
   const authLogout = () => {
     // Remove all user & token information
     setToken(null);
@@ -126,7 +137,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     register: authRegister,
     logout: authLogout,
   };
-
   return (
     <AuthContext.Provider value={authContextProps}>
       {children}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { RegisterRequest} from "@/lib/types/auth";
+import { RegisterRequest } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
@@ -77,21 +77,18 @@ export default function UserRegister() {
         setResult("Invalid login information");
         return;
       }
-      router.push(`/${user.username}`); 
+      router.push(`/${user.username}`);
     } catch {}
   };
 
   return (
     <div className="flex flex-col items-center p-10 my-30 bg-foreground">
       <h1>User Registration</h1>
-      <form
-        className="flex flex-col w-sm items-center"
-        onSubmit={handleSubmit}
-      >
+      <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />
         <PasswordField placeHolder="Password" required={true} name="password" />
-        <Button type="submit" >Create</Button>
+        <Button type="submit">Create</Button>
         <h3 className="text-red-800">{result}</h3>
       </form>
     </div>

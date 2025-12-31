@@ -91,7 +91,7 @@ export default function UserRegister() {
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />
         <PasswordField placeHolder="Password" required={true} name="password" />
-        <Button innerText="Create" type="submit" />
+        <Button type="submit" >Create</Button>
         <h3 className="text-red-800">{result}</h3>
       </form>
     </div>

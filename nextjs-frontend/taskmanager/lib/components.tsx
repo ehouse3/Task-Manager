@@ -3,7 +3,7 @@ import Link from "next/link";
 
 interface ButtonProps {
   onClick?: () => void;
-  innerText?: string;
+  children?: string | ReactElement;
   type?: "button" | "submit" | "reset";
 }
 /** Button Component that displays a button with callback function for press. */
@@ -14,14 +14,14 @@ export function Button(props: ButtonProps): ReactElement {
       onClick={props.onClick}
       type={props.type}
     >
-      {props.innerText ?? ""}
+      {props.children ?? ""}
     </button>
   );
 }
 
 interface NavigateProps {
   href: string;
-  innerText?: string;
+  children?: string | ReactElement;
 }
 /** Navigate Component to direct to new page */
 export function Navigate(props: NavigateProps): ReactElement {
@@ -30,7 +30,7 @@ export function Navigate(props: NavigateProps): ReactElement {
       className="mx-1 mb-4 px-4 py-1.5 bg-button text-center text-xl text-text-light rounded hover:bg-button-hover "
       href={props.href}
     >
-      {props.innerText ?? ""}
+      {props.children ?? ""}
     </Link>
   );
 }

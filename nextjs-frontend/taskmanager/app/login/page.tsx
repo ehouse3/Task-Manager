@@ -48,7 +48,7 @@ export default function UserLogin() {
       <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
         <TextField placeHolder="Username" required={true} name="username" />
         <PasswordField placeHolder="Password" required={true} name="password" />
-        <Button type="submit">Login</Button>
+        <Button variant="small" type="submit">Login</Button>
         <h3 className="text-red-800">{result}</h3>
       </form>
     </div>

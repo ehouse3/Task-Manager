@@ -1,38 +1,86 @@
 import { ChangeEvent, ReactElement } from "react";
 import Link from "next/link";
 
+const VARIANTS = {
+  bare: "bare",
+  small: "small",
+  medium: "medium",
+  large: "large",
+} as const;
+type Variant = (typeof VARIANTS)[keyof typeof VARIANTS];
+
+const BUTTONTYPES = {
+  button: "button",
+  submit: "submit",
+  reset: "reset",
+} as const;
+type ButtonType = (typeof BUTTONTYPES)[keyof typeof BUTTONTYPES];
+
 interface ButtonProps {
   onClick?: () => void;
   children?: string | ReactElement;
-  type?: "button" | "submit" | "reset";
+  variant?: Variant;
+  type?: ButtonType;
 }
 /** Button Component that displays a button with callback function for press. */
 export function Button(props: ButtonProps): ReactElement {
-  return (
-    <button
-      className="mx-1 mb-4 px-4 py-2 bg-button text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
-      onClick={props.onClick}
-      type={props.type}
-    >
-      {props.children ?? ""}
-    </button>
-  );
+  if (
+    props.variant == VARIANTS.small ||
+    props.variant == VARIANTS.medium ||
+    props.variant == VARIANTS.large
+  ) {
+    return (
+      <button
+        className="bg-button mx-1 mb-4 px-4 py-2 text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
+        onClick={props.onClick}
+        type={props.type}
+      >
+        {props.children ?? ""}
+      </button>
+    );
+  } else {
+    return (
+      <button
+        className="bg-button text-text-light rounded hover:bg-button-hover cursor-pointer"
+        onClick={props.onClick}
+        type={props.type}
+      >
+        {props.children ?? ""}
+      </button>
+    );
+  }
 }
 
 interface NavigateProps {
   href: string;
   children?: string | ReactElement;
+  variant?: Variant;
 }
 /** Navigate Component to direct to new page */
 export function Navigate(props: NavigateProps): ReactElement {
-  return (
-    <Link
-      className="mx-1 mb-4 px-4 py-1.5 bg-button text-center text-xl text-text-light rounded hover:bg-button-hover "
-      href={props.href}
-    >
-      {props.children ?? ""}
-    </Link>
-  );
+  if (
+    props.variant == VARIANTS.small ||
+    props.variant == VARIANTS.medium ||
+    props.variant == VARIANTS.large
+  ) {
+    return (
+      <Link
+        className="mx-1 mb-4 px-4 py-1.5 bg-button text-center text-xl text-text-light rounded hover:bg-button-hover "
+        href={props.href}
+      >
+        {props.children ?? ""}
+      </Link>
+    );
+  } else {
+    return (
+      <Link
+        className="bg-button text-center text-text-light rounded hover:bg-button-hover"
+        href={props.href}
+      >
+        {props.children ?? ""}
+      </Link>
+    );
+  }
 }
 
 interface TextFieldProps {

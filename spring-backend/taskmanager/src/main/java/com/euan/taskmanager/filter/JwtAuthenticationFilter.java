@@ -35,32 +35,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // logger.debug("LOGGER TEST");
+        logger.debug("Processing request: {} {}", request.getMethod(), request.getRequestURI());
         
         String requestPath = request.getRequestURI();
 
         // Bypass token verification for public endpoints
         if (requestPath.startsWith("/api/auth/") || requestPath.startsWith("/api/test/")) {
+            logger.debug("Bypassing JWT filter for public endpoint: {}", requestPath);
             filterChain.doFilter(request, response);
             return;
         }
 
         // Get token from Authorization header
         String authHeader = request.getHeader("Authorization");
+        logger.debug("Authorization header present: {}", authHeader != null);
         
         // Catch tokenless authorizations: throw exception to trigger AuthenticationEntryPoint
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            logger.warn("Missing or invalid Authorization header for request: {} {}", request.getMethod(), request.getRequestURI());
             throw new BadCredentialsException("Missing or invalid Authorization header");
         }
 
         String token = authHeader.substring(7); // Retrieve token
+        logger.debug("Extracted JWT token, validating...");
 
         // Validate token
         if (jwtUtil.validateToken(token) == false) {
+            logger.warn("Invalid or expired JWT token for request: {} {}", request.getMethod(), request.getRequestURI());
             throw new BadCredentialsException("Invalid or expired JWT token"); // triggers AuthenticationEntryPoint
         }
 
         String username = jwtUtil.getUsernameFromToken(token);
+        logger.debug("JWT validated successfully for user: {}", username);
 
         // Set authentication in context
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
@@ -69,6 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Assign authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        logger.debug("Authentication set in SecurityContext for user: {}", username);
 
         filterChain.doFilter(request, response);
     }

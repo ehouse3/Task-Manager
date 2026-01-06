@@ -69,26 +69,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     request: RegisterRequest
   ): Promise<User | null> => {
     try {
-      // Fetch user with login request
+      // Fetch Token and Id with login request
+      console.debug("Registering new user", request)
       const data: AuthResponse = await register(request);
-
-      const user: User = await getUserById(data.userId);
-
-      // assign token for user validation in cookies
+      
+      // Assigning token in cookies and state
+      console.debug("Assigning token:", data);      
       cookieStore.set({
         name: "token",
         value: data.token,
       });
+      setToken(data.token);
+
+      // Fetch User from returned id
+      console.debug("Fetching user data for id", data.userId);
+      const user: User = await getUserById(data.userId); 
+  
+      // Assign user in cookies and state
+      console.debug("Assigning user in cookies", user);
       cookieStore.set({
         name: "user",
         value: JSON.stringify(user),
       });
-
-      setToken(data.token);
       setUser(user);
 
+      console.debug("Registration Successful!");
       return user;
     } catch (error) {
+      console.warn("Registration Failed:", request);
       return null;
     }
   };
@@ -96,26 +104,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   /** On valid login, assigns token and user in cookies, returning LoginResult */
   const authLogin = async (request: LoginRequest): Promise<User | null> => {
     try {
-      // Fetch user with login request
+      // Perform login request and retrieve token + userId
+      console.debug("Logging in user", request);
       const data: AuthResponse = await login(request);
 
-      const user: User = await getUserById(data.userId);
-
-      // assign token for user validation in cookies
+      // Assign token in cookies and state
+      console.debug("Assigning token:", data);
       cookieStore.set({
         name: "token",
         value: data.token,
       });
+
+      setToken(data.token);
+
+      // Fetch user using returned id
+      console.debug("Fetching user data for id", data.userId);
+      const user: User = await getUserById(data.userId);
+ 
+      // Assign user in cookies and state
+      console.debug("Assigning user in cookies", user);
       cookieStore.set({
         name: "user",
         value: JSON.stringify(user),
       });
 
-      setToken(data.token);
       setUser(user);
-
+      console.debug("Login Successful!");
       return user;
     } catch (error) {
+      console.warn("Login Failed:", request);
       return null;
     }
   };

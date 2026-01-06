@@ -70,11 +70,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<User | null> => {
     try {
       // Fetch Token and Id with login request
-      console.debug("Registering new user", request)
+      console.debug("Registering new user", request);
       const data: AuthResponse = await register(request);
-      
+
       // Assigning token in cookies and state
-      console.debug("Assigning token:", data);      
+      console.debug("Assigning token:", data);
       cookieStore.set({
         name: "token",
         value: data.token,
@@ -83,8 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Fetch User from returned id
       console.debug("Fetching user data for id", data.userId);
-      const user: User = await getUserById(data.userId); 
-  
+      const user: User = await getUserById(data.userId);
+
       // Assign user in cookies and state
       console.debug("Assigning user in cookies", user);
       cookieStore.set({
@@ -114,21 +114,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         name: "token",
         value: data.token,
       });
-
       setToken(data.token);
 
       // Fetch user using returned id
       console.debug("Fetching user data for id", data.userId);
       const user: User = await getUserById(data.userId);
- 
+
       // Assign user in cookies and state
       console.debug("Assigning user in cookies", user);
       cookieStore.set({
         name: "user",
         value: JSON.stringify(user),
       });
-
       setUser(user);
+      
       console.debug("Login Successful!");
       return user;
     } catch (error) {

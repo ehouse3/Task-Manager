@@ -1,6 +1,7 @@
 import { ChangeEvent, ReactElement } from "react";
 import Link from "next/link";
 
+// Variants for core components like Buttons, Navigation buttons
 const VARIANTS = {
   bare: "bare",
   small: "small",

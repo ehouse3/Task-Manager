@@ -9,8 +9,8 @@ export default function Home() {
         Task Manager
       </div>
       <div className="flex flex-col w-sm">
-        <Navigate href="/register">Register New User</Navigate>
-        <Navigate href="/login">Login</Navigate>
+        <Navigate variant="small" href="/register">Register New User</Navigate>
+        <Navigate variant="small" href="/login">Login</Navigate>
       </div>
     </div>
   );

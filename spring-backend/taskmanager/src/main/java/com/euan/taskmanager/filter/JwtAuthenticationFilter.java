@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Validate token
         if (jwtUtil.validateToken(token) == false) {
-            logger.warn("Invalid or expired JWT token for request: {} {}", request.getMethod(), request.getRequestURI());
+            logger.warn("Invalid or expired JWT token for request: {} {} with exttracted token {}", request.getMethod(), request.getRequestURI(), token);
             throw new BadCredentialsException("Invalid or expired JWT token"); // triggers AuthenticationEntryPoint
         }
 

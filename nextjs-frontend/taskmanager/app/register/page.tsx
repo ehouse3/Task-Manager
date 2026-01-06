@@ -71,10 +71,12 @@ export default function UserRegister() {
       setResult("");
       // set loading
 
-      // Handle page redirections
+      // Register user
       const user: User | null = await auth.register(request);
+      
+      // Handle Redirection
       if (user == null) {
-        setResult("Invalid login information");
+        setResult("Invalid Registration");
         return;
       }
       router.push(`/${user.username}`);
@@ -88,7 +90,9 @@ export default function UserRegister() {
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />
         <PasswordField placeHolder="Password" required={true} name="password" />
-        <Button variant="small" type="submit">Create</Button>
+        <Button variant="small" type="submit">
+          Create
+        </Button>
         <h3 className="text-red-800">{result}</h3>
       </form>
     </div>

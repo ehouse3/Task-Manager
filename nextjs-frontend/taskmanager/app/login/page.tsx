@@ -12,7 +12,21 @@ export default function UserLogin() {
   const auth = useAuth();
   const router = useRouter();
 
-  // Handler for submitting form. Generates reigstration request for new user and calls api
+  // Verify field constraints
+  function isValidUsername(username: string): boolean {
+    if (username.length < 1) {
+      return false;
+    }
+    return true;
+  }
+  function isValidPassword(password: string): boolean {
+    if (password.length < 1) {
+      return false;
+    }
+    return true;
+  }
+
+  // Handler for submitting form. Generates login request for user and calls api
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -23,25 +37,37 @@ export default function UserLogin() {
       password: formData.get("password")?.toString() as string, // field required
     };
 
-    if (auth == undefined) {
-      setResult("Login Failed");
-      return;
-    }
+    try {
+      // Local field validation
+      if (!isValidUsername(request.username)) {
+        setResult("Invalid Username");
+        throw new Error("invalid username");
+      }
+      if (!isValidPassword(request.password)) {
+        setResult("Invalid Password");
+        throw new Error("invalid password");
+      }
 
-    // Awaiting server response
-    setResult("");
-    // set loading
+      if (auth == undefined) {
+        setResult("Login Failed");
+        return;
+      }
 
-    // Login user
-    const user: User | null = await auth.login(request);
+      // Awaiting server response
+      setResult("");
+      // set loading
 
-    // Handle page redirection
-    if (user == null) {
-      setResult("Invalid login information");
-      return;
-    }
-    router.push(`/${user.username}`);
-    return;
+      // Login user
+      const user: User | null = await auth.login(request);
+
+      // Handle page redirection
+      if (user == null) {
+        setResult("Invalid login information");
+        return;
+      }
+      setResult("Login Successful");
+      router.push(`/${user.username}`);
+    } catch {}
   };
 
   return (
@@ -53,7 +79,9 @@ export default function UserLogin() {
         <Button variant="small" type="submit">
           Login
         </Button>
-        <h3 className="text-red-800">{result}</h3>
+        <div className="mt-3 text-center">  
+          <h3 className="text-red-800">{result}</h3>
+        </div>
       </form>
     </div>
   );

@@ -32,7 +32,7 @@ export function Button(props: ButtonProps): ReactElement {
   ) {
     return (
       <button
-        className="bg-button mx-1 mb-4 px-4 py-2 text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
+        className="bg-button px-4 py-2 text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
         onClick={props.onClick}
         type={props.type}
       >
@@ -42,7 +42,7 @@ export function Button(props: ButtonProps): ReactElement {
   } else {
     return (
       <button
-        className="bg-button text-text-light rounded hover:bg-button-hover cursor-pointer"
+        className="bg-button rounded hover:bg-button-hover cursor-pointer"
         onClick={props.onClick}
         type={props.type}
       >

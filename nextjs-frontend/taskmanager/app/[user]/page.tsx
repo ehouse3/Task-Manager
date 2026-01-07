@@ -1,18 +1,21 @@
 "use client";
 
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useState } from "react";
 import { User } from "@/lib/types/user";
 import { useAuth } from "../auth/AuthContext";
 import { createProject } from "@/lib/api/projects";
 import { CreateProjectDto, Project } from "@/lib/types/project";
-import { getProjectsByUserId } from "@/lib/api/users";
 import { Button } from "@/lib/components";
+import { useRouter } from "next/router";
 
 export default function UserDashboard({
   params,
 }: {
   params: Promise<{ user: User }>;
 }) {
+  const [resultCreateProject, setResultCreateProject] = useState<string>(""); // Result of creating user
+  // const router = useRouter();
+
   // const { user } = use(params); // dont need params because user is defined in auth context
   const auth = useAuth();
 
@@ -43,34 +46,63 @@ export default function UserDashboard({
     );
   }
 
-  async function handleCreateProject(name?: string) {
-    if (auth?.user?.id == undefined) {
-      return;
-    }
-    if (name == undefined) {
-      return;
-    }
+  async function handleCreateProject() {
+    try {
+      if (auth?.user?.id == undefined) {
+        setResultCreateProject(
+          "User Id is not present to create a new project!"
+        );
+        return;
+      }
 
-    const dto: CreateProjectDto = {
-      userId: auth.user.id,
-      name: name,
-    };
-    const project: Project = await createProject(dto);
-    return project;
+      const name: string | null = prompt(
+        "What should the new project be named?"
+      );
+
+      if (name == undefined || name == "") {
+        setResultCreateProject("Name for new project can not be empty");
+        return;
+      }
+
+      // Creating new project
+      setResultCreateProject("");
+      const dto: CreateProjectDto = {
+        userId: auth.user.id,
+        name: name,
+      };
+      const project: Project = await createProject(dto);
+      setResultCreateProject("Project created successfully!");
+      return project;
+    } catch (error) {
+      console.error("Error creating project:", error);
+      setResultCreateProject("Failed to create project. Please try again.");
+    }
   }
 
   return (
     <div>
       <h1 className="mt-20 text-center">
-        Welcome {auth?.user?.nickname ?? auth?.user?.username}
+        Welcome {auth?.user?.nickname ?? auth?.user?.username}!
       </h1>
-      <div className="flex flex-col items-center bg-foreground">
+      <div className="flex flex-col items-center bg-foreground py-10">
         {/* Create new project button */}
         <div className="border-1">
-          <Button onClick={handleCreateProject}>
-            <div className="px-4 py-2">Create New Project</div>
+          <Button
+            variant="small"
+            onClick={() => {
+              handleCreateProject();
+            }}
+          >
+            Create New Project
           </Button>
         </div>
+
+        {/* Result message */}
+        {resultCreateProject && (
+          <div className="mt-3 text-center">
+            <h3 className="text-red-800">{resultCreateProject}</h3>
+          </div>
+        )}
 
         {/* List and Navigate to projects */}
         <div className="flex flex-row my-10 border-1">

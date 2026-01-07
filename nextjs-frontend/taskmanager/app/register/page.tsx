@@ -73,12 +73,13 @@ export default function UserRegister() {
 
       // Register user
       const user: User | null = await auth.register(request);
-      
+
       // Handle Redirection
       if (user == null) {
         setResult("Invalid Registration");
         return;
       }
+      setResult("Registration Successful");
       router.push(`/${user.username}`);
     } catch {}
   };
@@ -93,7 +94,9 @@ export default function UserRegister() {
         <Button variant="small" type="submit">
           Create
         </Button>
-        <h3 className="text-red-800">{result}</h3>
+        <div className="mt-3 text-center">
+          <h3 className="text-red-800">{result}</h3>
+        </div>
       </form>
     </div>
   );

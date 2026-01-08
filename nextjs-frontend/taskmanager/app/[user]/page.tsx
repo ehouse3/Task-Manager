@@ -31,9 +31,13 @@ export default function UserDashboard({
   /** Component that renders the list of projects provided */
   function ProjectsNavigation(props: ProjectsNavigationProps): ReactElement {
     return (
-      <ul>
+      <ul className="flex flex-row">
         {props.projects.map((project: Project) => (
-          <li className="border-1" key={project.id}>
+          // Needs new colors
+          <li
+            className="border-1 m-5 bg-button text-text-light p-2"
+            key={project.id}
+          >
             <h2>{project.name}</h2>
             <h3>{project.description ?? ""}</h3>
           </li>
@@ -69,7 +73,7 @@ export default function UserDashboard({
       const project: Project = await createProject(dto);
       setResultCreateProject("Project created successfully!");
 
-      auth.refreshUser();
+      auth.refreshUser(); // Refetch user to display newly created project
       return project;
     } catch (error) {
       console.error("Error creating project:", error);

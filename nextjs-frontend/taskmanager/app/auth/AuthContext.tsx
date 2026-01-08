@@ -65,6 +65,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
+  /** Set JWT and user in both state and cookies */
+  const setAuthData = async (token: string, userId: number): Promise<User> => {
+    // Assign token in cookies and state
+    console.debug("Assigning token:", token);
+    cookieStore.set({
+      name: "token",
+      value: token,
+    });
+    setToken(token);
+
+    // Fetch user from API and assign to cookies and state
+    console.debug("Fetching user data for id", userId);
+    const user: User = await getUserById(userId);
+
+    // Assign user in cookies and state
+    console.debug("Assigning user in cookies", user);
+    cookieStore.set({
+      name: "user",
+      value: JSON.stringify(user), // Utilize safer function to parse json
+    });
+    setUser(user);
+
+    return user;
+  };
+
   /** On valid registration, assign new token and user in cookies, returning RegisterResult */
   const authRegister = async (
     request: RegisterRequest
@@ -74,25 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.debug("Registering new user", request);
       const data: AuthResponse = await register(request);
 
-      // Assigning token in cookies and state
-      console.debug("Assigning token:", data);
-      cookieStore.set({
-        name: "token",
-        value: data.token,
-      });
-      setToken(data.token);
-
-      // Fetch User from returned id
-      console.debug("Fetching user data for id", data.userId);
-      const user: User = await getUserById(data.userId);
-
-      // Assign user in cookies and state
-      console.debug("Assigning user in cookies", user);
-      cookieStore.set({
-        name: "user",
-        value: JSON.stringify(user),
-      });
-      setUser(user);
+      const user = await setAuthData(data.token, data.userId);
 
       console.debug("Registration Successful!");
       return user;
@@ -109,26 +116,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.debug("Logging in user", request);
       const data: AuthResponse = await login(request);
 
-      // Assign token in cookies and state
-      console.debug("Assigning token:", data);
-      cookieStore.set({
-        name: "token",
-        value: data.token,
-      });
-      setToken(data.token);
+      const user = await setAuthData(data.token, data.userId);
 
-      // Fetch user using returned id
-      console.debug("Fetching user data for id", data.userId);
-      const user: User = await getUserById(data.userId);
-
-      // Assign user in cookies and state
-      console.debug("Assigning user in cookies", user);
-      cookieStore.set({
-        name: "user",
-        value: JSON.stringify(user),
-      });
-      setUser(user);
-      
       console.debug("Login Successful!");
       return user;
     } catch (error) {
@@ -146,7 +135,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     cookieStore.delete("user");
   };
 
-/** Refreshes the AuthContexts user state */
+  /** Refreshes the AuthContexts user state */
   const refreshUser = async (): Promise<User | null> => {
     try {
       // Check cookies for user
@@ -160,17 +149,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Parse user from cookie to get ID
       const cachedUser: User = JSON.parse(userCookie.value);
 
-      // Fetch fresh user data from API
-      console.debug("Refreshing user data for id", cachedUser.id);
-      const freshUser: User = await getUserById(cachedUser.id);
-
-      // Update state and cookies
-      console.debug("Updating user in cookies", freshUser);
-      cookieStore.set({
-        name: "user",
-        value: JSON.stringify(freshUser),
-      });
-      setUser(freshUser);
+      // Fetch fresh user data and update state/cookies
+      const freshUser = await setAuthData(token!, cachedUser.id);
 
       console.debug("User refresh successful!");
       return freshUser;

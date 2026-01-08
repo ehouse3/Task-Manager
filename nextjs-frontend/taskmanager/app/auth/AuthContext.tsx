@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (request: LoginRequest) => Promise<User | null>;
   register: (request: RegisterRequest) => Promise<User | null>;
   logout: () => void;
+  refreshUser: () => Promise<User | null>;
 }
 
 // Context that stores authentication functions and user/token info
@@ -145,6 +146,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     cookieStore.delete("user");
   };
 
+/** Refreshes the AuthContexts user state */
+  const refreshUser = async (): Promise<User | null> => {
+    try {
+      // Check cookies for user
+      const userCookie: CookieListItem | null = await cookieStore.get("user");
+
+      if (!userCookie || !userCookie.value) {
+        console.warn("No user found in cookies");
+        return null;
+      }
+
+      // Parse user from cookie to get ID
+      const cachedUser: User = JSON.parse(userCookie.value);
+
+      // Fetch fresh user data from API
+      console.debug("Refreshing user data for id", cachedUser.id);
+      const freshUser: User = await getUserById(cachedUser.id);
+
+      // Update state and cookies
+      console.debug("Updating user in cookies", freshUser);
+      cookieStore.set({
+        name: "user",
+        value: JSON.stringify(freshUser),
+      });
+      setUser(freshUser);
+
+      console.debug("User refresh successful!");
+      return freshUser;
+    } catch (error) {
+      console.warn("User refresh failed:", error);
+      return null;
+    }
+  };
+
   const authContextProps = {
     user: user,
     token: token,
@@ -152,6 +187,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isLoading: isLoading,
     register: authRegister,
     logout: authLogout,
+    refreshUser: refreshUser,
   };
   return (
     <AuthContext.Provider value={authContextProps}>

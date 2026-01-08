@@ -16,8 +16,8 @@ export default function UserDashboard({
   const [resultCreateProject, setResultCreateProject] = useState<string>(""); // Result of creating user
   // const router = useRouter();
 
-  // const { user } = use(params); // dont need params because user is defined in auth context
   const auth = useAuth();
+  // const projects
 
   // Wait for auth to be initialized
   if (auth?.isLoading) {
@@ -25,24 +25,20 @@ export default function UserDashboard({
     return <div>Loading...</div>;
   }
 
-  // console.log(auth?.user);
-  // console.log(auth?.user?.projects);
-
   interface ProjectsNavigationProps {
     projects: Project[];
   }
+  /** Component that renders the list of projects provided */
   function ProjectsNavigation(props: ProjectsNavigationProps): ReactElement {
     return (
-      <div>
-        <ul>
-          {props.projects.map((project: Project) => (
-            <li key={project.id}>
-              <h2>{project.name}</h2>
-              <h3>{project.description ?? ""}</h3>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul>
+        {props.projects.map((project: Project) => (
+          <li className="border-1" key={project.id}>
+            <h2>{project.name}</h2>
+            <h3>{project.description ?? ""}</h3>
+          </li>
+        ))}
+      </ul>
     );
   }
 
@@ -72,6 +68,8 @@ export default function UserDashboard({
       };
       const project: Project = await createProject(dto);
       setResultCreateProject("Project created successfully!");
+
+      auth.refreshUser();
       return project;
     } catch (error) {
       console.error("Error creating project:", error);

@@ -1,29 +1,33 @@
 "use client";
 
-import React, { ReactElement, useState } from "react";
-import { User } from "@/lib/types/user";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { createProject } from "@/lib/api/projects";
 import { CreateProjectDto, Project } from "@/lib/types/project";
-import { Button } from "@/lib/components";
-import { useRouter } from "next/router";
+import { Button, Navigate } from "@/lib/components";
 
 export default function UserDashboard({
   params,
 }: {
-  params: Promise<{ user: User }>;
+  params: Promise<{ username: string }>;
 }) {
   const [resultCreateProject, setResultCreateProject] = useState<string>(""); // Result of creating user
   // const router = useRouter();
-
   const auth = useAuth();
-  // const projects
+  const [username, setUsername] = useState<string>("");
 
-  // Wait for auth to be initialized
+  useEffect(() => {
+    params.then((param) => {
+      setUsername(param.username);
+    });
+  }, [params]);
+
+    // Wait for auth to be initialized
   if (auth?.isLoading) {
     // improve
     return <div>Loading...</div>;
   }
+
 
   interface ProjectsNavigationProps {
     projects: Project[];
@@ -34,13 +38,12 @@ export default function UserDashboard({
       <ul className="flex flex-row">
         {props.projects.map((project: Project) => (
           // Needs new colors
-          <li
-            className="border-1 m-5 bg-button text-text-light p-2"
-            key={project.id}
-          >
-            <h2>{project.name}</h2>
-            <h3>{project.description ?? ""}</h3>
-          </li>
+          <Navigate href={`/${username}/${project.name}`} key={project.id} variant="bare">
+            <li className="m-1 text-text-light bg-button rounded p-2">
+              <h2>{project.name}</h2>
+              <h3>{project.description ?? "tesing description"}</h3>
+            </li>
+          </Navigate>
         ))}
       </ul>
     );
@@ -89,12 +92,7 @@ export default function UserDashboard({
       <div className="flex flex-col items-center bg-foreground py-10">
         {/* Create new project button */}
         <div className="border-1">
-          <Button
-            variant="small"
-            onClick={() => {
-              handleCreateProject();
-            }}
-          >
+          <Button variant="small" onClick={handleCreateProject}>
             Create New Project
           </Button>
         </div>
@@ -107,7 +105,7 @@ export default function UserDashboard({
         )}
 
         {/* List and Navigate to projects */}
-        <div className="flex flex-row my-10 border-1">
+        <div className="flex flex-row my-10 rounded-xl">
           {auth?.user?.projects != null && auth?.user?.projects?.length > 0 ? (
             <ProjectsNavigation projects={auth.user.projects} />
           ) : (

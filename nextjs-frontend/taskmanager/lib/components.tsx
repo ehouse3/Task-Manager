@@ -42,7 +42,7 @@ export function Button(props: ButtonProps): ReactElement {
   } else {
     return (
       <button
-        className="bg-button rounded hover:bg-button-hover cursor-pointer"
+        className="bg-button hover:bg-button-hover cursor-pointer"
         onClick={props.onClick}
         type={props.type}
       >
@@ -75,7 +75,7 @@ export function Navigate(props: NavigateProps): ReactElement {
   } else {
     return (
       <Link
-        className="bg-button text-center text-text-light rounded hover:bg-button-hover"
+        className=""
         href={props.href}
       >
         {props.children ?? ""}

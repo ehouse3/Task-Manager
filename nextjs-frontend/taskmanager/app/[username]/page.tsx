@@ -48,7 +48,7 @@ export default function UserDashboard({
             variant="bare"
           >
             <li className="m-2 text-text-light bg-button rounded p-2">
-              <h2>{project.name}</h2>
+              <h1>{project.name}</h1>
               <h3>{project.description ?? "tesing description"}</h3>
             </li>
           </Navigate>

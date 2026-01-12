@@ -86,7 +86,7 @@ export default function UserRegister() {
 
   return (
     <div className="flex flex-col items-center p-10 my-30 bg-foreground">
-      <h1>User Registration</h1>
+      <h1 className="title mb-3">User Registration</h1>
       <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />

@@ -14,20 +14,20 @@ export default function UserDashboard({
   const [resultCreateProject, setResultCreateProject] = useState<string>(""); // Result of creating user
   // const router = useRouter();
   const auth = useAuth();
-  const [username, setUsername] = useState<string>("");
+  const [usernameBackup, setUsernameBackup] = useState<string>("");
 
+  /** Retrieve backup username in case authContext.user isn't present */
   useEffect(() => {
     params.then((param) => {
-      setUsername(param.username);
+      setUsernameBackup(param.username);
     });
-  }, [params]);
+  }, [params, usernameBackup]);
 
-    // Wait for auth to be initialized
+  // Wait for auth to be initialized
   if (auth?.isLoading) {
     // improve
     return <div>Loading...</div>;
   }
-
 
   interface ProjectsNavigationProps {
     projects: Project[];
@@ -38,8 +38,16 @@ export default function UserDashboard({
       <ul className="flex flex-row">
         {props.projects.map((project: Project) => (
           // Needs new colors
-          <Navigate href={`/${username}/${project.name}`} key={project.id} variant="bare">
-            <li className="m-1 text-text-light bg-button rounded p-2">
+          <Navigate
+            href={
+              auth && auth?.user // Use backup username if none present
+                ? `/${auth?.user?.username}/${project.name}`
+                : `/${usernameBackup}/${project.name}`
+            }
+            key={project.id}
+            variant="bare"
+          >
+            <li className="m-2 text-text-light bg-button rounded p-2">
               <h2>{project.name}</h2>
               <h3>{project.description ?? "tesing description"}</h3>
             </li>

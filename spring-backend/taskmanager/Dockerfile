@@ -28,8 +28,8 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+#     CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
 # Set JVM options for debugging and monitoring
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC"

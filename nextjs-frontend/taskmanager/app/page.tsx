@@ -8,7 +8,7 @@ export default function Home() {
       <div className="text-center font-bold text-[6rem] text-title">
         Task Manager
       </div>
-      <h2>The Task Managment Application </h2>
+      <h2>The Project and Task Managment Application </h2>
       <div className="flex flex-col w-sm my-6">
         <Navigate variant="small" href="/register">Register New User</Navigate>
         <Navigate variant="small" href="/login">Login</Navigate>

@@ -1,6 +1,6 @@
 import { apiClient } from "./client";
-import { User } from "../types/user";
-import { Project } from "../types/project";
+import { User } from "./types/user";
+import { Project } from "./types/project";
 
 // Get all users
 export const getAllUsers = async (): Promise<User[]> => {

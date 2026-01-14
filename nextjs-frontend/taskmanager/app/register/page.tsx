@@ -5,14 +5,21 @@ import { RegisterRequest } from "@/lib/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/api/types/user";
+
+interface RegisterForm {
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+}
 
 export default function UserRegister() {
   const [result, setResult] = useState<string>(""); // result of registration
   const router = useRouter();
   const auth = useAuth(); // Assigning auth user
 
-  // Verify field constraints
+  // Verify registration field constraints
   function isValidUsername(username: string): boolean {
     if (username.length < 1) {
       return false;
@@ -34,32 +41,40 @@ export default function UserRegister() {
     }
     return true;
   }
+  function passwordsMatch(password: string, passwordConfirmation: string): boolean {
+    return password === passwordConfirmation;
+  }
 
   // Handler for submitting form. Generates reigstration request for new user and calls api
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+
     const formData: FormData = new FormData(event.currentTarget);
-    const request: RegisterRequest = {
+    const registerForm: RegisterForm = {
       username: formData.get("username")?.toString() as string, // field required
       email: formData.get("email")?.toString() as string, // field required
       password: formData.get("password")?.toString() as string, // field required
+      passwordConfirmation: formData.get("passwordConfirmation")?.toString() as string // field required
     };
-
+    
     try {
       // Local field validation
-      if (!isValidUsername(request.username)) {
+      if (!isValidUsername(registerForm.username)) {
         setResult("Invalid Username");
         throw new Error("invalid username");
       }
-      if (!isValidEmail(request.email)) {
+      if (!isValidEmail(registerForm.email)) {
         setResult("Invalid Email");
         throw new Error("invalid email");
       }
-      if (!isValidPassword(request.password)) {
+      if (!isValidPassword(registerForm.password)) {
         setResult("Invalid Password");
         throw new Error("invalid password");
+      }
+      if (passwordsMatch(registerForm.password, registerForm.passwordConfirmation)) {
+
       }
 
       if (auth == undefined) {
@@ -70,6 +85,13 @@ export default function UserRegister() {
       // Awaiting server response
       setResult("");
       // set loading
+
+      // Convert to RegisterRequest type for api
+      const request: RegisterRequest = {
+        username: registerForm.username,
+        email: registerForm.email,
+        password: registerForm.password
+      };
 
       // Register user
       const user: User | null = await auth.register(request);
@@ -90,7 +112,9 @@ export default function UserRegister() {
       <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
         <TextField placeHolder="Username" required={true} name="username" />
         <TextField placeHolder="Email" required={true} name="email" />
+        <div id="break" className="my-2"></div>
         <PasswordField placeHolder="Password" required={true} name="password" />
+        <PasswordField placeHolder="Confirm Password" required={true} name="passwordConfirmation" />
         <Button variant="small" type="submit">
           Create
         </Button>

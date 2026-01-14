@@ -3,7 +3,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { createProject } from "@/lib/api/projects";
-import { CreateProjectDto, Project } from "@/lib/types/project";
+import { CreateProjectDto, Project } from "@/lib/api/types/project";
 import { Button, Navigate } from "@/lib/components";
 
 export default function UserDashboard({

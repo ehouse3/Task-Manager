@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { RegisterRequest } from "@/lib/types/auth";
+import { RegisterRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";

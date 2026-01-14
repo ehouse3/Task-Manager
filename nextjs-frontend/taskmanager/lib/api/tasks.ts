@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { Task, CreateTaskDto, UpdateTaskDto } from "../types/task";
+import { Task, CreateTaskDto, UpdateTaskDto } from "./types/task";
 
 export const getAllTasks = async (): Promise<Task[]> => {
   const response = await apiClient.get("/tasks");

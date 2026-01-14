@@ -1,11 +1,11 @@
 "use client";
 
 import { Button, TextField, PasswordField } from "@/lib/components";
-import { LoginRequest } from "@/lib/types/auth";
+import { LoginRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/api/types/user";
 
 export default function UserLogin() {
   const [result, setResult] = useState<string>(""); // result of login

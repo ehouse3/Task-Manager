@@ -7,8 +7,8 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { User } from "@/lib/types/user";
-import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/types/auth";
+import { User } from "@/lib/api/types/user";
+import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/api/types/auth";
 import { login, register } from "@/lib/api/auth";
 import { getUserById } from "@/lib/api/users";
 

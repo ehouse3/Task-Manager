@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { Project, CreateProjectDto, UpdateProjectDto } from "../types/project";
+import { Project, CreateProjectDto, UpdateProjectDto } from "./types/project";
 
 export const getAllProjects = async (): Promise<Project[]> => {
   const response = await apiClient.get("/projects");

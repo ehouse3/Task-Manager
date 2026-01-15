@@ -2,20 +2,20 @@ import { ChangeEvent, ReactElement } from "react";
 import Link from "next/link";
 
 // Variants for core components like Buttons, Navigation buttons
-const VARIANTS = {
+const Variants = {
   bare: "bare",
   small: "small",
   medium: "medium",
   large: "large",
 } as const;
-type Variant = (typeof VARIANTS)[keyof typeof VARIANTS];
+type Variant = (typeof Variants)[keyof typeof Variants];
 
-const BUTTONTYPES = {
+const ButtonTypes = {
   button: "button",
   submit: "submit",
   reset: "reset",
 } as const;
-type ButtonType = (typeof BUTTONTYPES)[keyof typeof BUTTONTYPES];
+type ButtonType = (typeof ButtonTypes)[keyof typeof ButtonTypes];
 
 interface ButtonProps {
   onClick?: () => void;
@@ -26,9 +26,9 @@ interface ButtonProps {
 /** Button Component that displays a button with callback function for press. */
 export function Button(props: ButtonProps): ReactElement {
   if (
-    props.variant == VARIANTS.small ||
-    props.variant == VARIANTS.medium ||
-    props.variant == VARIANTS.large
+    props.variant === Variants.small ||
+    props.variant === Variants.medium ||
+    props.variant === Variants.large
   ) {
     return (
       <button
@@ -60,9 +60,9 @@ interface NavigateProps {
 /** Navigate Component to direct to new page */
 export function Navigate(props: NavigateProps): ReactElement {
   if (
-    props.variant == VARIANTS.small ||
-    props.variant == VARIANTS.medium ||
-    props.variant == VARIANTS.large
+    props.variant === Variants.small ||
+    props.variant === Variants.medium ||
+    props.variant === Variants.large
   ) {
     return (
       <Link
@@ -74,10 +74,7 @@ export function Navigate(props: NavigateProps): ReactElement {
     );
   } else {
     return (
-      <Link
-        className=""
-        href={props.href}
-      >
+      <Link className="" href={props.href}>
         {props.children ?? ""}
       </Link>
     );

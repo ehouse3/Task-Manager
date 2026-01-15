@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
 import { User } from "@/lib/api/types/user";
 
+interface LoginForm {
+  username: string;
+  password: string;
+}
+
 export default function UserLogin() {
   const [result, setResult] = useState<string>(""); // result of login
   const auth = useAuth();
@@ -32,42 +37,46 @@ export default function UserLogin() {
   ) => {
     event.preventDefault();
     const formData: FormData = new FormData(event.currentTarget);
-    const request: LoginRequest = {
+    const loginForm: LoginForm = {
       username: formData.get("username")?.toString() as string, // field required
       password: formData.get("password")?.toString() as string, // field required
     };
 
-    try {
-      // Local field validation
-      if (!isValidUsername(request.username)) {
-        setResult("Invalid Username");
-        throw new Error("invalid username");
-      }
-      if (!isValidPassword(request.password)) {
-        setResult("Invalid Password");
-        throw new Error("invalid password");
-      }
+    // Local field validation
+    if (!isValidUsername(loginForm.username)) {
+      setResult("Invalid Username");
+      return;
+    }
+    if (!isValidPassword(loginForm.password)) {
+      setResult("Invalid Password");
+      return;
+    }
 
-      if (auth == undefined) {
-        setResult("Login Failed");
-        return;
-      }
+    if (auth == undefined) {
+      setResult("Login Failed");
+      return;
+    }
 
-      // Awaiting server response
-      setResult("");
-      // set loading
+    // Awaiting server response
+    setResult("");
+    // set loading
 
-      // Login user
-      const user: User | null = await auth.login(request);
+    // Convert to LoginRequest type for api
+    const request: LoginRequest = {
+      username: loginForm.username,
+      password: loginForm.password,
+    };
 
-      // Handle page redirection
-      if (user == null) {
-        setResult("Invalid login information");
-        return;
-      }
-      setResult("Login Successful");
-      router.push(`/${user.username}`);
-    } catch {}
+    // Login user
+    const user: User | null = await auth.login(request);
+
+    // Handle page redirection
+    if (user == null) {
+      setResult("Invalid login information");
+      return;
+    }
+    setResult("Login Successful");
+    router.push(`/${user.username}`);
   };
 
   return (

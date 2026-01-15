@@ -41,8 +41,8 @@ export default function UserDashboard({
           <Navigate
             href={
               auth && auth?.user // Use backup username if none present
-                ? `/${auth?.user?.username}/${project.name}`
-                : `/${usernameBackup}/${project.name}`
+                ? `/${auth?.user?.username}/${project.id}`
+                : `/${usernameBackup}/${project.id}`
             }
             key={project.id}
             variant="bare"

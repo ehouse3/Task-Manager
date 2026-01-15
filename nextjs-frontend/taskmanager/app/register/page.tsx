@@ -41,7 +41,10 @@ export default function UserRegister() {
     }
     return true;
   }
-  function passwordsMatch(password: string, passwordConfirmation: string): boolean {
+  function passwordsMatch(
+    password: string,
+    passwordConfirmation: string
+  ): boolean {
     return password === passwordConfirmation;
   }
 
@@ -56,54 +59,57 @@ export default function UserRegister() {
       username: formData.get("username")?.toString() as string, // field required
       email: formData.get("email")?.toString() as string, // field required
       password: formData.get("password")?.toString() as string, // field required
-      passwordConfirmation: formData.get("passwordConfirmation")?.toString() as string // field required
+      passwordConfirmation: formData
+        .get("passwordConfirmation")
+        ?.toString() as string, // field required
     };
-    
-    try {
-      // Local field validation
-      if (!isValidUsername(registerForm.username)) {
-        setResult("Invalid Username");
-        throw new Error("invalid username");
-      }
-      if (!isValidEmail(registerForm.email)) {
-        setResult("Invalid Email");
-        throw new Error("invalid email");
-      }
-      if (!isValidPassword(registerForm.password)) {
-        setResult("Invalid Password");
-        throw new Error("invalid password");
-      }
-      if (passwordsMatch(registerForm.password, registerForm.passwordConfirmation)) {
 
-      }
+    // Local field validation
+    if (!isValidUsername(registerForm.username)) {
+      setResult("Invalid Username");
+      return;
+    }
+    if (!isValidEmail(registerForm.email)) {
+      setResult("Invalid Email");
+      return;
+    }
+    if (!isValidPassword(registerForm.password)) {
+      setResult("Invalid Password");
+      return;
+    }
+    if (
+      !passwordsMatch(registerForm.password, registerForm.passwordConfirmation)
+    ) {
+      setResult("Passwords must match");
+      return;
+    }
 
-      if (auth == undefined) {
-        setResult("Registration Failed");
-        return;
-      }
+    if (auth == undefined) {
+      setResult("Registration Failed");
+      return;
+    }
 
-      // Awaiting server response
-      setResult("");
-      // set loading
+    // Awaiting server response
+    setResult("");
+    // set loading
 
-      // Convert to RegisterRequest type for api
-      const request: RegisterRequest = {
-        username: registerForm.username,
-        email: registerForm.email,
-        password: registerForm.password
-      };
+    // Convert to RegisterRequest type for api
+    const request: RegisterRequest = {
+      username: registerForm.username,
+      email: registerForm.email,
+      password: registerForm.password,
+    };
 
-      // Register user
-      const user: User | null = await auth.register(request);
+    // Register user
+    const user: User | null = await auth.register(request);
 
-      // Handle Redirection
-      if (user == null) {
-        setResult("Invalid Registration");
-        return;
-      }
-      setResult("Registration Successful");
-      router.push(`/${user.username}`);
-    } catch {}
+    // Handle Redirection
+    if (user == null) {
+      setResult("Invalid Registration");
+      return;
+    }
+    setResult("Registration Successful");
+    router.push(`/${user.username}`);
   };
 
   return (
@@ -114,7 +120,11 @@ export default function UserRegister() {
         <TextField placeHolder="Email" required={true} name="email" />
         <div id="break" className="my-2"></div>
         <PasswordField placeHolder="Password" required={true} name="password" />
-        <PasswordField placeHolder="Confirm Password" required={true} name="passwordConfirmation" />
+        <PasswordField
+          placeHolder="Confirm Password"
+          required={true}
+          name="passwordConfirmation"
+        />
         <Button variant="small" type="submit">
           Create
         </Button>

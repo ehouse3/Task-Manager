@@ -2,27 +2,14 @@ import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+const publicPaths = new Set(["/login", "/register", "/"]);
+
 export function middleware(request: NextRequest) {
   console.log("Activating middleware for:", request.nextUrl.pathname);
 
   // Public endpoints (token not required)
-  if (request.nextUrl.pathname.startsWith("/login")) {
-    // '/login'
-    const response: NextResponse = NextResponse.next();
-    return response;
-  }
-  if (request.nextUrl.pathname.startsWith("/register")) {
-    // '/register'
-    const response: NextResponse = NextResponse.next();
-    return response;
-  }
-  if (
-    request.nextUrl.pathname.startsWith("/") &&
-    request.nextUrl.pathname.endsWith("/")
-  ) {
-    // '/'
-    const response: NextResponse = NextResponse.next();
-    return response;
+  if (publicPaths.has(request.nextUrl.pathname)) {
+    return NextResponse.next();
   }
 
   const token: RequestCookie | undefined = request.cookies.get("token");
@@ -42,5 +29,5 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // Matcher to apply middleware onto
-  matcher: ["/login", "/register", "/dashboard", "/"],
+  matcher: ["/login", "/register", "/", "/[username]/*"],
 };

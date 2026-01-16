@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement } from "react";
+import { ChangeEvent, ReactNode } from "react";
 import Link from "next/link";
 
 // Variants for core components like Buttons, Navigation buttons
@@ -19,12 +19,12 @@ type ButtonType = (typeof ButtonTypes)[keyof typeof ButtonTypes];
 
 interface ButtonProps {
   onClick?: () => void;
-  children?: string | ReactElement;
+  children?: ReactNode;
   variant?: Variant;
   type?: ButtonType;
 }
 /** Button Component that displays a button with callback function for press. */
-export function Button(props: ButtonProps): ReactElement {
+export function Button(props: ButtonProps): ReactNode {
   if (
     props.variant === Variants.small ||
     props.variant === Variants.medium ||
@@ -54,11 +54,11 @@ export function Button(props: ButtonProps): ReactElement {
 
 interface NavigateProps {
   href: string;
-  children?: string | ReactElement;
+  children?: ReactNode;
   variant?: Variant;
 }
 /** Navigate Component to direct to new page */
-export function Navigate(props: NavigateProps): ReactElement {
+export function Navigate(props: NavigateProps): ReactNode {
   if (
     props.variant === Variants.small ||
     props.variant === Variants.medium ||
@@ -90,7 +90,7 @@ interface TextFieldProps {
   name?: string;
 }
 /** Input Field to input text */
-export function TextField(props: TextFieldProps): ReactElement {
+export function TextField(props: TextFieldProps): ReactNode {
   return (
     <input
       className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"
@@ -114,7 +114,7 @@ interface PasswordFieldProps {
   name?: string;
 }
 /** Input Field to input passwords */
-export function PasswordField(props: PasswordFieldProps): ReactElement {
+export function PasswordField(props: PasswordFieldProps): ReactNode {
   return (
     <input
       className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"

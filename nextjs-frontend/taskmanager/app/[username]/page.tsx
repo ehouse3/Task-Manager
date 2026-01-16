@@ -24,7 +24,7 @@ export default function UserDashboard({
   }, [params, usernameBackup]);
 
   // Wait for auth to be initialized
-  if (auth?.isLoading) {
+  if (auth.isLoading) {
     // improve
     return <div>Loading...</div>;
   }
@@ -106,11 +106,9 @@ export default function UserDashboard({
         </div>
 
         {/* Result message */}
-        {resultCreateProject && (
-          <div className="mt-3 text-center">
-            <h3 className="text-red-800">{resultCreateProject}</h3>
-          </div>
-        )}
+        <div className="mt-3 text-center">
+          <h3 className="text-red-800">{resultCreateProject}</h3>
+        </div>
 
         {/* List and Navigate to projects */}
         <div className="flex flex-row my-10 rounded-xl">

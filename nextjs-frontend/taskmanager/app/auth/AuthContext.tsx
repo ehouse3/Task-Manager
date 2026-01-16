@@ -8,7 +8,11 @@ import React, {
   useEffect,
 } from "react";
 import { User } from "@/lib/api/types/user";
-import { AuthResponse, LoginRequest, RegisterRequest } from "@/lib/api/types/auth";
+import {
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+} from "@/lib/api/types/auth";
 import { login, register } from "@/lib/api/auth";
 import { getUserById } from "@/lib/api/users";
 
@@ -27,7 +31,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /** Provides auth context, and AuthContextType functions */
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -41,9 +49,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       try {
         // Retrieve tokens and users from cookies
-        const tokenCookie: CookieListItem | null = await cookieStore.get(
-          "token"
-        );
+        const tokenCookie: CookieListItem | null =
+          await cookieStore.get("token");
         const userCookie: CookieListItem | null = await cookieStore.get("user");
 
         // Assign state if user or tokens in cookies

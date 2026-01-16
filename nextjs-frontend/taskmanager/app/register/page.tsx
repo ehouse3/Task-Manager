@@ -84,11 +84,6 @@ export default function UserRegister() {
       return;
     }
 
-    if (auth == undefined) {
-      setResult("Registration Failed");
-      return;
-    }
-
     // Awaiting server response
     setResult("");
     // set loading

@@ -85,11 +85,9 @@ export default function Page({
     <div>
       <Button onClick={handleCreateTask}>Create New Task</Button>
       {/* Result message */}
-      {resultCreateTask && (
-        <div className="mt-3 text-center">
-          <h3 className="text-red-800">{resultCreateTask}</h3>
-        </div>
-      )}
+      <div className="mt-3 text-center">
+        <h3 className="text-red-800">{resultCreateTask}</h3>
+      </div>
     </div>
   );
 }

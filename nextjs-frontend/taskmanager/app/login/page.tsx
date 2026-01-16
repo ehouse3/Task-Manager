@@ -52,11 +52,6 @@ export default function UserLogin() {
       return;
     }
 
-    if (auth == undefined) {
-      setResult("Login Failed");
-      return;
-    }
-
     // Awaiting server response
     setResult("");
     // set loading
@@ -88,7 +83,7 @@ export default function UserLogin() {
         <Button variant="small" type="submit">
           Login
         </Button>
-        <div className="mt-3 text-center">  
+        <div className="mt-3 text-center">
           <h3 className="text-red-800">{result}</h3>
         </div>
       </form>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactElement, useEffect, useState } from "react";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import { createProject } from "@/lib/api/projects";
 import { CreateProjectDto, Project } from "@/lib/api/types/project";
 import { Button, Navigate } from "@/lib/components";
@@ -29,6 +29,11 @@ export default function UserDashboard({
     return <div>Loading...</div>;
   }
 
+  // if (!auth.user) {
+  //   console.debug("Auth user not present!");
+  //   return;
+  // }
+
   interface ProjectsNavigationProps {
     projects: Project[];
   }
@@ -40,9 +45,9 @@ export default function UserDashboard({
           // Needs new colors
           <Navigate
             href={
-              auth && auth?.user // Use backup username if none present
-                ? `/${auth?.user?.username}/${project.id}`
-                : `/${usernameBackup}/${project.id}`
+              auth.user // Use backup username if none present
+                ? `/dashboard/${auth.user.username}/${project.id}`
+                : `/dashboard/${usernameBackup}/${project.id}`
             }
             key={project.id}
             variant="bare"
@@ -61,13 +66,13 @@ export default function UserDashboard({
     try {
       if (auth?.user?.id == undefined) {
         setResultCreateProject(
-          "User Id is not present to create a new project!"
+          "User Id is not present to create a new project!",
         );
         return;
       }
 
       const name: string | null = prompt(
-        "What should the new project be named?"
+        "What should the new project be named?",
       );
 
       if (name == undefined || name == "") {

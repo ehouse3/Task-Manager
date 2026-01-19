@@ -43,14 +43,14 @@ export default function UserRegister() {
   }
   function passwordsMatch(
     password: string,
-    passwordConfirmation: string
+    passwordConfirmation: string,
   ): boolean {
     return password === passwordConfirmation;
   }
 
   // Handler for submitting form. Generates reigstration request for new user and calls api
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
-    event: FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
 
@@ -104,7 +104,7 @@ export default function UserRegister() {
       return;
     }
     setResult("Registration Successful");
-    router.push(`/${user.username}`);
+    router.push(`/dashboard/${user.username}`);
   };
 
   return (

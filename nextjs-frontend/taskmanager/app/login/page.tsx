@@ -33,7 +33,7 @@ export default function UserLogin() {
 
   // Handler for submitting form. Generates login request for user and calls api
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
-    event: FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     const formData: FormData = new FormData(event.currentTarget);
@@ -71,7 +71,7 @@ export default function UserLogin() {
       return;
     }
     setResult("Login Successful");
-    router.push(`/${user.username}`);
+    router.push(`/dashboard/${user.username}`);
   };
 
   return (

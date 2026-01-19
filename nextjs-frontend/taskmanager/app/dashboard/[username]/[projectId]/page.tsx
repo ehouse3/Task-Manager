@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/app/auth/AuthContext";
+import { useAuth } from "../../../auth/AuthContext";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/lib/components";
 import { createTask } from "@/lib/api/tasks";
@@ -31,6 +31,11 @@ export default function Page({
     return <div>Loading...</div>;
   }
 
+  // if (!auth.user) {
+  //   console.debug("Auth user not present!");
+  //   return;
+  // }
+
   async function handleCreateTask() {
     try {
       if (auth?.user?.id == undefined) {
@@ -41,7 +46,7 @@ export default function Page({
       const project: Project | undefined = auth.user.projects?.find(
         (project) => {
           return project.id === projectId;
-        }
+        },
       );
 
       if (!project) {
@@ -50,7 +55,7 @@ export default function Page({
       }
 
       const title: string | null = prompt(
-        "What should the new task be titled?"
+        "What should the new task be titled?",
       );
 
       if (title == undefined || title == "") {
@@ -59,7 +64,7 @@ export default function Page({
       }
 
       const description: string | null = prompt(
-        "Describe the task (optional):"
+        "Describe the task (optional):",
       );
 
       // Creating new task

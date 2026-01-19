@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   /** On valid registration, assign new token and user in cookies, returning RegisterResult */
   const authRegister = async (
-    request: RegisterRequest
+    request: RegisterRequest,
   ): Promise<User | null> => {
     try {
       // Fetch Token and Id with login request

@@ -120,7 +120,7 @@ export default function UserRegister() {
           required={true}
           name="passwordConfirmation"
         />
-        <Button variant="small" type="submit">
+        <Button variant="medium" type="submit">
           Create
         </Button>
         <div className="mt-3 text-center">

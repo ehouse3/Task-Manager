@@ -25,31 +25,22 @@ interface ButtonProps {
 }
 /** Button Component that displays a button with callback function for press. */
 export function Button(props: ButtonProps): ReactNode {
-  if (
-    props.variant === Variants.small ||
-    props.variant === Variants.medium ||
-    props.variant === Variants.large
-  ) {
-    return (
-      <button
-        className="bg-button px-4 py-2 text-xl text-text-light rounded hover:bg-button-hover cursor-pointer"
-        onClick={props.onClick}
-        type={props.type}
-      >
-        {props.children ?? ""}
-      </button>
-    );
-  } else {
-    return (
-      <button
-        className="bg-button hover:bg-button-hover cursor-pointer"
-        onClick={props.onClick}
-        type={props.type}
-      >
-        {props.children ?? ""}
-      </button>
-    );
+  let className = "bg-button hover:bg-button-hover cursor-pointer";
+  if (props.variant === Variants.small) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-2 py-1 text-center text-sm text-text-light rounded flex items-center";
+  } else if (props.variant === Variants.medium) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-4 py-2 text-center text-xl text-text-light rounded flex items-center";
+  } else if (props.variant === Variants.large) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-6 py-3 text-center text-2xl text-text-light rounded flex items-center";
   }
+  return (
+    <button className={className} onClick={props.onClick} type={props.type}>
+      {props.children ?? ""}
+    </button>
+  );
 }
 
 interface NavigateProps {
@@ -59,26 +50,22 @@ interface NavigateProps {
 }
 /** Navigate Component to direct to new page */
 export function Navigate(props: NavigateProps): ReactNode {
-  if (
-    props.variant === Variants.small ||
-    props.variant === Variants.medium ||
-    props.variant === Variants.large
-  ) {
-    return (
-      <Link
-        className="mx-1 mb-4 px-4 py-1.5 bg-button text-center text-xl text-text-light rounded hover:bg-button-hover "
-        href={props.href}
-      >
-        {props.children ?? ""}
-      </Link>
-    );
-  } else {
-    return (
-      <Link className="" href={props.href}>
-        {props.children ?? ""}
-      </Link>
-    );
+  let className = "";
+  if (props.variant === Variants.small) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-2 py-1 text-center text-sm text-text-light rounded flex items-center";
+  } else if (props.variant === Variants.medium) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-4 py-2 text-center text-xl text-text-light rounded flex items-center";
+  } else if (props.variant === Variants.large) {
+    className =
+      "bg-button hover:bg-button-hover cursor-pointer px-6 py-3 text-center text-2xl text-text-light rounded flex items-center";
   }
+  return (
+    <Link className={className} href={props.href}>
+      {props.children ?? ""}
+    </Link>
+  );
 }
 
 interface TextFieldProps {

@@ -9,9 +9,13 @@ export default function Home() {
         Task Manager
       </div>
       <h2>The Project and Task Managment Application </h2>
-      <div className="flex flex-col w-sm my-6">
-        <Navigate variant="small" href="/register">Register New User</Navigate>
-        <Navigate variant="small" href="/login">Login</Navigate>
+      <div className="flex flex-col w-sm my-6 gap-3">
+        <Navigate variant="large" href="/register">
+          Register New User
+        </Navigate>
+        <Navigate variant="large" href="/login">
+          Login
+        </Navigate>
       </div>
     </div>
   );

@@ -52,9 +52,9 @@ export default function UserDashboard({
             key={project.id}
             variant="bare"
           >
-            <li className="m-2 text-text-light bg-button rounded p-2">
-              <h1>{project.name}</h1>
-              <h3>{project.description ?? "tesing description"}</h3>
+            <li className="m-2 text-text-light bg-button rounded p-2 hover:bg-button-hover">
+              <h2>{project.name}</h2>
+              <h3>{project.description ?? ""}</h3>
             </li>
           </Navigate>
         ))}
@@ -105,7 +105,7 @@ export default function UserDashboard({
       <div className="flex flex-col items-center bg-foreground py-10">
         {/* Create new project button */}
         <div className="border-1">
-          <Button variant="small" onClick={handleCreateProject}>
+          <Button variant="medium" onClick={handleCreateProject}>
             Create New Project
           </Button>
         </div>

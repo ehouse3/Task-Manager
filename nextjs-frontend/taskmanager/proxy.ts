@@ -28,6 +28,6 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Matcher to apply middleware onto
+  // Matcher to apply middleware onto (ignore public endpoints '/login', '/register' and '/'):
   matcher: ["/dashboard/:username*"],
 };

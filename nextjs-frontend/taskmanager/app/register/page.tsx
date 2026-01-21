@@ -4,7 +4,7 @@ import { Button, TextField, PasswordField } from "@/lib/components";
 import { RegisterRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth, useUnauth } from "../auth/AuthContext";
 import { User } from "@/lib/api/types/user";
 
 interface RegisterForm {
@@ -17,7 +17,7 @@ interface RegisterForm {
 export default function UserRegister() {
   const [result, setResult] = useState<string>(""); // result of registration
   const router = useRouter();
-  const auth = useAuth(); // Assigning auth user
+  const auth = useUnauth();
 
   // Verify registration field constraints
   function isValidUsername(username: string): boolean {

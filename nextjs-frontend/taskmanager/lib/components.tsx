@@ -53,13 +53,13 @@ export function Navigate(props: NavigateProps): ReactNode {
   let className = "";
   if (props.variant === Variants.small) {
     className =
-      "bg-button hover:bg-button-hover cursor-pointer px-2 py-1 text-center text-sm text-text-light rounded flex items-center";
+      "bg-button hover:bg-button-hover cursor-pointer px-2 py-1 text-center text-sm text-text-light rounded flex items-center self-center";
   } else if (props.variant === Variants.medium) {
     className =
-      "bg-button hover:bg-button-hover cursor-pointer px-4 py-2 text-center text-xl text-text-light rounded flex items-center";
+      "bg-button hover:bg-button-hover cursor-pointer px-4 py-2 text-center text-xl text-text-light rounded flex items-center self-center";
   } else if (props.variant === Variants.large) {
     className =
-      "bg-button hover:bg-button-hover cursor-pointer px-6 py-3 text-center text-2xl text-text-light rounded flex items-center";
+      "bg-button hover:bg-button-hover cursor-pointer px-6 py-3 text-center text-2xl text-text-light rounded flex items-center self-center";
   }
   return (
     <Link className={className} href={props.href}>

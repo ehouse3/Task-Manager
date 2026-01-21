@@ -25,14 +25,12 @@ export default function UserDashboard({
 
   // Wait for auth to be initialized
   if (auth.isLoading) {
-    // improve
     return <div>Loading...</div>;
   }
 
-  // if (!auth.user) {
-  //   console.debug("Auth user not present!");
-  //   return;
-  // }
+  if (!auth.user) {
+    return <div>Finding user</div>;
+  }
 
   interface ProjectsNavigationProps {
     projects: Project[];

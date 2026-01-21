@@ -16,7 +16,17 @@ import {
 import { login, register } from "@/lib/api/auth";
 import { getUserById } from "@/lib/api/users";
 
-interface AuthContextType {
+// Context for authenticated pages (no null)
+interface AuthenticatedContextType {
+  user: User;
+  token: string;
+  isLoading: boolean; // already loaded?
+  logout: () => void;
+  refreshUser: () => Promise<User | null>;
+}
+
+// Context for unauthenticated pages (/login or /register)
+interface UnauthenticatedContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
@@ -27,15 +37,45 @@ interface AuthContextType {
 }
 
 // Context that stores authentication functions and user/token info
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<UnauthenticatedContextType | undefined>(
+  undefined,
+);
 
-/** Provides auth context, and AuthContextType functions */
-export function useAuth() {
+/**
+ * Hook for unprotected pages that can have null values (like user or token)
+ * Returns Unauthenticated context functions (like login() or register())
+ */
+export function useUnauth(): UnauthenticatedContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
+}
+
+/**
+ * Hook for protected pages that require authentication
+ * Returns AuthenticatedContext functions
+ */
+export function useAuth(): AuthenticatedContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  if (!context.user || !context.token) {
+    throw new Error("User must be authenticated to use useAuth hook");
+  }
+
+  // Migrate variable from AuthContextType to AuthenticatedContextType
+  const authenticatedContext: AuthenticatedContextType = {
+    user: context.user,
+    token: context.token,
+    isLoading: context.isLoading,
+    logout: context.logout,
+    refreshUser: context.refreshUser,
+  };
+
+  return authenticatedContext;
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

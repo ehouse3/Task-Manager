@@ -7,14 +7,13 @@ A modern, full-stack task management application built with Java Spring Boot and
 Task Manager is a comprehensive task management platform designed to help teams and individuals organize their work efficiently. The application supports multiple users managing projects and tasks with deadlines, enabling better organization and productivity. Built with a focus on scalability and security, this app demonstrates modern full-stack development practices.
 
 ### Future Features
-- Real-time notifications and updates
-- Task comments and collaboration features
+
+- Friends list and friend requests
 - Advanced filtering and search capabilities
 - Task priorities and categories
-- Progress tracking and analytics
-- Team workspaces and permissions
-- File attachments and integration
-- Recurring tasks and reminders
+- Progress tracking
+- Team workspaces/ permissions / admin implementation
+- Recurring tasks
 
 ## Features
 
@@ -30,21 +29,25 @@ Task Manager is a comprehensive task management platform designed to help teams 
 ## Tech Stack
 
 ### Backend
+
 - **Java Spring Boot** - RESTful API framework
 - **PostgreSQL** - Relational database
 - **Docker** - Containerization
 
 ### Frontend
+
 - **Next.js** - React framework with app router
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
 
 ### DevOps
+
 - **Docker & Docker Compose** - Container orchestration
 
 ## Getting Started
 
 ### Prerequisites
+
 - Docker and Docker Compose installed
 - Node.js 18+ (for local Next.js development)
 - Java 17+ (for local Spring Boot development)
@@ -52,16 +55,19 @@ Task Manager is a comprehensive task management platform designed to help teams 
 ### Running the Project with Docker
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd Task-Manager
    ```
 
 2. **Start the backend and database**
+
    ```bash
    cd spring-backend/taskmanager
    docker-compose up -d
    ```
+
    This will start:
    - PostgreSQL database on port 5432
    - Spring Boot backend on port 8080
@@ -77,6 +83,7 @@ Task Manager is a comprehensive task management platform designed to help teams 
 ### Running Locally (Without Docker)
 
 1. **Backend Setup**
+
    ```bash
    cd spring-backend/taskmanager
    mvn clean install
@@ -110,6 +117,7 @@ Task-Manager/
 ## API Documentation
 
 The backend provides REST endpoints for:
+
 - User authentication and management
 - Project CRUD operations
 - Task management with deadlines

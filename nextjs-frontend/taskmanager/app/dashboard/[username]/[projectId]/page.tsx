@@ -17,7 +17,7 @@ export default function Page({
 }) {
   const auth = useAuth();
   const [resultCreateTask, setResultCreateTask] = useState<string>(""); // Result of creating task
-  const [projectId, setProjectId] = useState<number | null>(null);
+  const [projectId, setProjectId] = useState<number | null>(null); // Current page's selected project
 
   /** Retrieve project name from params */
   useEffect(() => {
@@ -31,18 +31,8 @@ export default function Page({
     return <div>Loading...</div>;
   }
 
-  // if (!auth.user) {
-  //   console.debug("Auth user not present!");
-  //   return;
-  // }
-
   async function handleCreateTask() {
     try {
-      if (auth?.user?.id == undefined) {
-        setResultCreateTask("User Id is not present to create a new task!");
-        return;
-      }
-
       const project: Project | undefined = auth.user.projects?.find(
         (project) => {
           return project.id === projectId;
@@ -58,7 +48,7 @@ export default function Page({
         "What should the new task be titled?",
       );
 
-      if (title == undefined || title == "") {
+      if (title == null || title == "") {
         setResultCreateTask("Title for new task cannot be empty");
         return;
       }
@@ -68,7 +58,7 @@ export default function Page({
       );
 
       // Creating new task
-      setResultCreateTask("");
+      setResultCreateTask("Creating Task");
       const dto: CreateTaskDto = {
         title: title,
         description: description || undefined,

@@ -12,9 +12,10 @@ interface DashboardHeaderProps {
   logout: () => void;
 }
 
+/** Dashboard header  to '/dashboard/[username] and 'logout' */
 function DashboardHeader(props: DashboardHeaderProps): ReactElement {
   return (
-    <div className="flex flex-row bg-foreground p-2 justify-between items-center">
+    <div className="flex flex-row bg-foreground p-2 justify-between items-center border-b-5 border-foreground-lighter">
       <Navigate variant="medium" href={`/dashboard/${props.user.username}`}>
         {props.user.nickname} Profile
       </Navigate>
@@ -41,7 +42,7 @@ export default function UserLayout({
   function handleUserLogout() {
     auth.logout();
     console.debug("logged out and routing to home");
-    router.push("/register");
+    router.push("/login");
   }
 
   return (

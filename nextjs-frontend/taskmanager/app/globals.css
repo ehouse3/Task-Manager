@@ -12,13 +12,15 @@
 */
 :root {
   --background: #ebebe8;
-  --foreground: #D69F7E;
-  
+  --foreground: #d69f7e;
+  --foreground-lighter: #ecbea2;
+  --foreground-lighter-hover: #efd0bc;
+
   --button: #774936;
   --button-hover: #985f46;
 
   --text-dark: #313638;
-  --text-light: #E8E9EB;
+  --text-light: #e8e9eb;
 
   --title: #3c1500;
 }
@@ -29,6 +31,8 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-foreground-lighter: var(--foreground-lighter);
+  --color-foreground-lighter-hover: var(--foreground-lighter-hover);
 
   --color-button: var(--button);
   --color-button-hover: var(--button-hover);

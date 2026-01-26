@@ -12,19 +12,18 @@ export default function UserDashboard({
   params: Promise<{ username: string }>;
 }) {
   const [resultCreateProject, setResultCreateProject] = useState<string>(""); // Result of creating user
-  // const router = useRouter();
   const auth = useAuth();
-  const [usernameBackup, setUsernameBackup] = useState<string>("");
 
-  /** Retrieve backup username in case authContext.user isn't present */
-  useEffect(() => {
-    params.then((param) => {
-      setUsernameBackup(param.username);
-    });
-  }, [params, usernameBackup]);
+  // const [usernameBackup, setUsernameBackup] = useState<string>("");
+  // /** Retrieve backup username in case authContext.user isn't present */
+  // useEffect(() => {
+  //   params.then((param) => {
+  //     setUsernameBackup(param.username);
+  //   });
+  // }, [params, usernameBackup]);
 
   // Wait for auth to be initialized
-  if (auth.isLoading) {
+  if (!auth || auth.isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -34,6 +33,7 @@ export default function UserDashboard({
 
   interface ProjectsNavigationProps {
     projects: Project[];
+    username: string;
   }
   /** Component that renders the list of projects provided */
   function ProjectsNavigation(props: ProjectsNavigationProps): ReactElement {
@@ -42,11 +42,7 @@ export default function UserDashboard({
         {props.projects.map((project: Project) => (
           // Needs new colors
           <Navigate
-            href={
-              auth.user // Use backup username if none present
-                ? `/dashboard/${auth.user.username}/${project.id}`
-                : `/dashboard/${usernameBackup}/${project.id}`
-            }
+            href={`/dashboard/${props.username}/${project.id}`}
             key={project.id}
             variant="bare"
           >
@@ -116,7 +112,10 @@ export default function UserDashboard({
         {/* List and Navigate to projects */}
         <div className="flex flex-row my-10 rounded-xl">
           {auth?.user?.projects != null && auth?.user?.projects?.length > 0 ? (
-            <ProjectsNavigation projects={auth.user.projects} />
+            <ProjectsNavigation
+              projects={auth.user.projects}
+              username={auth.user.username}
+            />
           ) : (
             <h2>No projects found</h2>
           )}

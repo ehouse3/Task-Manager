@@ -35,19 +35,27 @@ export default function UserLayout({
   const auth = useAuth();
   const router = useRouter();
 
+  if (!auth) {
+    return <div>Loading...</div>;
+  }
+
   if (auth.isLoading || !auth.user) {
     return <div>Loading...</div>;
   }
 
-  function handleUserLogout() {
-    auth.logout();
-    console.debug("logged out and routing to home");
+  function handleUserLogout(logout: () => void) {
+    logout();
     router.push("/login");
   }
 
   return (
     <div>
-      <DashboardHeader user={auth.user} logout={handleUserLogout} />
+      <DashboardHeader
+        user={auth.user}
+        logout={() => {
+          handleUserLogout(auth.logout);
+        }}
+      />
       {children}
     </div>
   );

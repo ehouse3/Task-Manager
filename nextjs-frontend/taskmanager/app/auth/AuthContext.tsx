@@ -45,10 +45,13 @@ const AuthContext = createContext<UnauthenticatedContextType | undefined>(
  * Hook for unprotected pages that can have null values (like user or token)
  * Returns Unauthenticated context functions (like login() or register())
  */
-export function useUnauth(): UnauthenticatedContextType {
+export function useUnauth(): UnauthenticatedContextType | null {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
+  }
+  if (context.isLoading) {
+    return null;
   }
   return context;
 }
@@ -57,13 +60,14 @@ export function useUnauth(): UnauthenticatedContextType {
  * Hook for protected pages that require authentication
  * Returns AuthenticatedContext functions
  */
-export function useAuth(): AuthenticatedContextType {
+export function useAuth(): AuthenticatedContextType | null {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  if (!context.user || !context.token) {
-    throw new Error("User must be authenticated to use useAuth hook");
+  // Protected route confirmation (awaiting auth init)
+  if (context.isLoading || !context.user || !context.token) {
+    return null;
   }
 
   // Migrate variable from AuthContextType to AuthenticatedContextType

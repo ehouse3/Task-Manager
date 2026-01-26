@@ -19,6 +19,10 @@ export default function UserRegister() {
   const router = useRouter();
   const auth = useUnauth();
 
+  if (!auth) {
+    return <div>Loading...</div>;
+  }
+
   // Verify registration field constraints
   function isValidUsername(username: string): boolean {
     if (username.length < 1) {
@@ -48,7 +52,7 @@ export default function UserRegister() {
     return password === passwordConfirmation;
   }
 
-  // Handler for submitting form. Generates reigstration request for new user and calls api
+  /** Handler for submitting form. Generates reigstration request for new user and calls api */
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>,
   ) => {

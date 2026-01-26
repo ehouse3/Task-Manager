@@ -17,6 +17,10 @@ export default function UserLogin() {
   const auth = useUnauth();
   const router = useRouter();
 
+  if (!auth) {
+    return <div>Loading...</div>;
+  }
+
   // Verify field constraints
   function isValidUsername(username: string): boolean {
     if (username.length < 1) {
@@ -31,7 +35,7 @@ export default function UserLogin() {
     return true;
   }
 
-  // Handler for submitting form. Generates login request for user and calls api
+  /** Handler for submitting form. Generates login request for user and calls api */
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent<HTMLFormElement>,
   ) => {

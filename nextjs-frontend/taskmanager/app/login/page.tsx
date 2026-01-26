@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextField, PasswordField } from "@/lib/components";
+import { Button, TextField, PasswordField, Navigate } from "@/lib/components";
 import { LoginRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -75,18 +75,32 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="flex flex-col items-center p-10 my-30 bg-foreground">
-      <h1 className="title mb-3">User Login</h1>
-      <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
-        <TextField placeHolder="Username" required={true} name="username" />
-        <PasswordField placeHolder="Password" required={true} name="password" />
-        <Button variant="medium" type="submit">
-          Login
-        </Button>
-        <div className="mt-3 text-center">
-          <h3 className="text-red-800">{result}</h3>
-        </div>
-      </form>
+    <div>
+      <div className="flex">
+        <Navigate variant="medium" href="/">
+          Back
+        </Navigate>
+      </div>
+      <div className="flex flex-col items-center p-10 my-19 bg-foreground">
+        <h1 className="title mb-3">User Login</h1>
+        <form
+          className="flex flex-col w-sm items-center"
+          onSubmit={handleSubmit}
+        >
+          <TextField placeHolder="Username" required={true} name="username" />
+          <PasswordField
+            placeHolder="Password"
+            required={true}
+            name="password"
+          />
+          <Button variant="medium" type="submit">
+            Login
+          </Button>
+          <div className="mt-3 text-center">
+            <h3 className="text-red-800">{result}</h3>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

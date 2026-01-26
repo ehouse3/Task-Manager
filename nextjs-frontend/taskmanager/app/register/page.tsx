@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextField, PasswordField } from "@/lib/components";
+import { Button, TextField, PasswordField, Navigate } from "@/lib/components";
 import { RegisterRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -108,25 +108,39 @@ export default function UserRegister() {
   };
 
   return (
-    <div className="flex flex-col items-center p-10 my-30 bg-foreground">
-      <h1 className="title mb-3">User Registration</h1>
-      <form className="flex flex-col w-sm items-center" onSubmit={handleSubmit}>
-        <TextField placeHolder="Username" required={true} name="username" />
-        <TextField placeHolder="Email" required={true} name="email" />
-        <div id="break" className="my-2"></div>
-        <PasswordField placeHolder="Password" required={true} name="password" />
-        <PasswordField
-          placeHolder="Confirm Password"
-          required={true}
-          name="passwordConfirmation"
-        />
-        <Button variant="medium" type="submit">
-          Create
-        </Button>
-        <div className="mt-3 text-center">
-          <h3 className="text-red-800">{result}</h3>
-        </div>
-      </form>
+    <div>
+      <div className="flex">
+        <Navigate variant="medium" href="/">
+          Back
+        </Navigate>
+      </div>
+      <div className="flex flex-col items-center p-10 my-19 bg-foreground">
+        <h1 className="title mb-3">User Registration</h1>
+        <form
+          className="flex flex-col w-sm items-center"
+          onSubmit={handleSubmit}
+        >
+          <TextField placeHolder="Username" required={true} name="username" />
+          <TextField placeHolder="Email" required={true} name="email" />
+          <div id="break" className="my-2"></div>
+          <PasswordField
+            placeHolder="Password"
+            required={true}
+            name="password"
+          />
+          <PasswordField
+            placeHolder="Confirm Password"
+            required={true}
+            name="passwordConfirmation"
+          />
+          <Button variant="medium" type="submit">
+            Create
+          </Button>
+          <div className="mt-3 text-center">
+            <h3 className="text-red-800">{result}</h3>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

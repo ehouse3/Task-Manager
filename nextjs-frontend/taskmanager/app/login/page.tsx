@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextField, PasswordField, Navigate } from "@/lib/components";
+import { Button, Input, Navigate } from "@/lib/components";
 import { LoginRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -91,9 +91,15 @@ export default function UserLogin() {
           className="flex flex-col w-sm items-center"
           onSubmit={handleSubmit}
         >
-          <TextField placeHolder="Username" required={true} name="username" />
-          <PasswordField
+          <Input
+            placeHolder="Username"
+            type="text"
+            required={true}
+            name="username"
+          />
+          <Input
             placeHolder="Password"
+            type="password"
             required={true}
             name="password"
           />

@@ -2,16 +2,10 @@ import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-// const publicPaths: Set<string> = new Set(["/login", "/register", "/"]);
-
 export default function proxy(request: NextRequest) {
   console.log("Activating middleware for:", request.nextUrl.pathname);
 
-  // Public endpoints (token not required)
-  // if (publicPaths.has(request.nextUrl.pathname)) {
-  //   return NextResponse.next();
-  // }
-
+  // Verify token exists, redirect when missing
   const token: RequestCookie | undefined = request.cookies.get("token");
   console.log(token);
   if (token == undefined || token.value == "") {
@@ -28,6 +22,6 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Matcher to apply middleware onto (ignore public endpoints '/login', '/register' and '/'):
+  // Matcher to apply middleware onto private endpoints (ignore public endpoints '/login', '/register' and '/'):
   matcher: ["/dashboard/:username*"],
 };

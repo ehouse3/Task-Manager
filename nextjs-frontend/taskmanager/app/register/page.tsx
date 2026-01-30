@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextField, PasswordField, Navigate } from "@/lib/components";
+import { Button, Input, Navigate } from "@/lib/components";
 import { RegisterRequest } from "@/lib/api/types/auth";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -124,16 +124,23 @@ export default function UserRegister() {
           className="flex flex-col w-sm items-center"
           onSubmit={handleSubmit}
         >
-          <TextField placeHolder="Username" required={true} name="username" />
-          <TextField placeHolder="Email" required={true} name="email" />
+          <Input
+            placeHolder="Username"
+            type="text"
+            required={true}
+            name="username"
+          />
+          <Input placeHolder="Email" type="text" required={true} name="email" />
           <div id="break" className="my-2"></div>
-          <PasswordField
+          <Input
             placeHolder="Password"
+            type="password"
             required={true}
             name="password"
           />
-          <PasswordField
+          <Input
             placeHolder="Confirm Password"
+            type="password"
             required={true}
             name="passwordConfirmation"
           />

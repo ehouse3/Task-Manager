@@ -68,16 +68,24 @@ export function Navigate(props: NavigateProps): ReactNode {
   );
 }
 
-interface TextFieldProps {
+// Type for Input components
+const InputTypes = {
+  text: "text",
+  password: "password",
+} as const;
+type InputType = (typeof InputTypes)[keyof typeof InputTypes];
+
+interface InputFieldProps {
   placeHolder?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   minLength?: number;
   maxLength?: number;
   name?: string;
+  type?: InputType;
 }
 /** Input Field to input text */
-export function TextField(props: TextFieldProps): ReactNode {
+export function Input(props: InputFieldProps): ReactNode {
   return (
     <input
       className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"
@@ -87,31 +95,7 @@ export function TextField(props: TextFieldProps): ReactNode {
       minLength={props.minLength}
       maxLength={props.maxLength}
       name={props.name}
-      type="text"
-    ></input>
-  );
-}
-
-interface PasswordFieldProps {
-  placeHolder?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  name?: string;
-}
-/** Input Field to input passwords */
-export function PasswordField(props: PasswordFieldProps): ReactNode {
-  return (
-    <input
-      className="mx-1 mb-4 px-2 py-1 bg-gray-300 text-text-dark rounded hover:bg-gray-400 text-center"
-      placeholder={props.placeHolder}
-      onChange={props.onChange}
-      required={props.required}
-      minLength={props.minLength}
-      maxLength={props.maxLength}
-      name={props.name}
-      type="password"
+      type={props.type}
     ></input>
   );
 }

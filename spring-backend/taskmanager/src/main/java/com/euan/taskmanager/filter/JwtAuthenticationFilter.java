@@ -1,6 +1,7 @@
 package com.euan.taskmanager.filter;
 
 import com.euan.taskmanager.utils.JwtUtil;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 // Verifies Jwt once per request
 @Component
@@ -29,6 +31,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+    // Public endpoints
+    private static final List<String> publicEndpoints = List.of(
+            "/api/auth",
+            "/api/test");
+
+    /**
+     * Returns true if requestPath starts with a public endpoint, false otherwise
+     */
+    private boolean isPublicEndpoint(String requestPath) {
+        for (String prefix : publicEndpoints) {
+            if (requestPath.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -36,11 +54,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         logger.debug("Processing request: {} {}", request.getMethod(), request.getRequestURI());
-        
+
         String requestPath = request.getRequestURI();
 
         // Bypass token verification for public endpoints
-        if (requestPath.startsWith("/api/auth/") || requestPath.startsWith("/api/test/")) {
+        if (isPublicEndpoint(requestPath)) {
             logger.debug("Bypassing JWT filter for public endpoint: {}", requestPath);
             filterChain.doFilter(request, response);
             return;
@@ -49,10 +67,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Get token from Authorization header
         String authHeader = request.getHeader("Authorization");
         logger.debug("Authorization header present: {}", authHeader != null);
-        
-        // Catch tokenless authorizations: throw exception to trigger AuthenticationEntryPoint
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.warn("Missing or invalid Authorization header for request: {} {}", request.getMethod(), request.getRequestURI());
+
+        // Catch tokenless authorizations: throw exception to trigger
+        // AuthenticationEntryPoint
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) { // header exits? (does not verify)
+            logger.warn("Missing or invalid Authorization header for request: {} {}", request.getMethod(),
+                    request.getRequestURI());
             throw new BadCredentialsException("Missing or invalid Authorization header");
         }
 
@@ -61,7 +81,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Validate token
         if (jwtUtil.validateToken(token) == false) {
-            logger.warn("Invalid or expired JWT token for request: {} {} with exttracted token {}", request.getMethod(), request.getRequestURI(), token);
+            logger.warn("Invalid or expired JWT token for request: {} {} with exttracted token {}", request.getMethod(),
+                    request.getRequestURI(), token);
             throw new BadCredentialsException("Invalid or expired JWT token"); // triggers AuthenticationEntryPoint
         }
 

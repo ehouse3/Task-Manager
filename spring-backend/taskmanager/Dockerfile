@@ -1,4 +1,4 @@
-# Build stage
+# Build stage (docker build --target builder .)
 FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /build
 
@@ -17,7 +17,7 @@ COPY src ./src
 # Build application skipping tests (tests can be run in separate stage)
 RUN mvn clean package -DskipTests
 
-# Test stage (optional, can be used for validation)
+# Test stage (optional, can be used for validation) (docker build --target builder .)
 FROM maven:3.9.4-eclipse-temurin-17 AS tester
 WORKDIR /test
 COPY --from=builder /build .
@@ -36,7 +36,7 @@ ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC"
 
 # Enable remote debugging (disabled by default, enable with environment variable)
 # Use: docker run -e ENABLE_DEBUG=true -p 5005:5005 <image>
-ENV ENABLE_DEBUG=false
+ENV ENABLE_DEBUG=true
 
 # Create entrypoint script (as root, before switching user)
 RUN echo '#!/bin/sh' > /app/entrypoint.sh && \

@@ -2,6 +2,7 @@ package com.euan.taskmanager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class AuthServiceUnitTests {
 
     @Test
     void testRegisterSuccess() {
-        
+
         RegisterRequest request = new RegisterRequest("username", "email", "password");
 
         // Create mocked successful user
@@ -59,20 +60,18 @@ class AuthServiceUnitTests {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(UserRole.USER);
-        
+
         // Simulate mock repository
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(userRepository.existsByUsername(request.getUsername())).thenReturn(false);
-        when(userRepository.save(user)).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
         when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token");
 
-        AuthResponse response = authService.register(request); // bug
+        AuthResponse response = authService.register(request);
 
         assertNotNull(response);
         assertEquals(1L, response.getUserId());
         assertEquals("mock-token", response.getToken());
-
-
     }
 
     @Test

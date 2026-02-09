@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.euan.taskmanager.dto.auth.AuthResponse;
+import com.euan.taskmanager.dto.auth.LoginRequest;
 import com.euan.taskmanager.dto.auth.RegisterRequest;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
@@ -49,7 +52,7 @@ class AuthServiceUnitTests {
         passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    /** Assigns RegisterRequest to new User object*/
+    /** Assigns RegisterRequest to new User object */
     User createMockUser(RegisterRequest request) {
         User user = new User();
         user.setId(1L);
@@ -64,7 +67,6 @@ class AuthServiceUnitTests {
     /** Unit tests a successful registration of a user */
     @Test
     void testRegisterSuccess() {
-
         RegisterRequest request = new RegisterRequest("username", "email", "password");
         User user = createMockUser(request);
 
@@ -81,47 +83,156 @@ class AuthServiceUnitTests {
         assertEquals("mock-token", response.getToken());
     }
 
-    /** Unit tests an unsuccessful registration of a user, because of an already existing email */
+    /**
+     * Unit tests an unsuccessful registration of a user, because of an already
+     * existing email
+     */
     @Test
     void testRegisterFailure_EmailExists() {
-
         RegisterRequest request = new RegisterRequest("username", "email", "password");
         User user = createMockUser(request);
 
         // Simulate mock repository
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(true); // email already exists
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(true); // Email already exists
         when(userRepository.existsByUsername(request.getUsername())).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token");
 
-        // AuthResponse response = authService.register(request);
+        // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> authService.register(request), "Expected register to throw IllegalArgumentException");
-        
+
         assertEquals(thrown.getMessage(), "Email already exists");
-            
 
     }
 
-    /** Unit tests an unsuccessful registration of a user, because of an already existing username */
+    /**
+     * Unit tests an unsuccessful registration of a user, because of an already
+     * existing username
+     */
     @Test
     void testRegisterFailure_UsernameExists() {
-
         RegisterRequest request = new RegisterRequest("username", "email", "password");
         User user = createMockUser(request);
 
         // Simulate mock repository
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(userRepository.existsByUsername(request.getUsername())).thenReturn(true);
+        when(userRepository.existsByUsername(request.getUsername())).thenReturn(true); // Username already exists
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token");
 
-        // AuthResponse response = authService.register(request);
+        // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> authService.register(request), "Expected register to throw IllegalArgumentException");
-        
+
         assertEquals(thrown.getMessage(), "Username already exists");
 
+    }
+
+    /** Unit tests a full flow of successful registration, then login */
+    @Test
+    void testRegisterLoginSuccess() {
+        // Testing Registration
+        RegisterRequest registerRequest = new RegisterRequest("username", "email", "password");
+        User user = createMockUser(registerRequest);
+
+        // Simulate mock repository
+        when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(registerRequest.getUsername())).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-register-token");
+
+        AuthResponse registerResponse = authService.register(registerRequest);
+
+        // Verify successful registration
+        assertNotNull(registerResponse);
+        assertEquals("mock-register-token", registerResponse.getToken());
+        assertEquals(1L, registerResponse.getUserId());
+
+        // Testing Login
+        LoginRequest loginRequest = new LoginRequest("username", "password");
+
+        when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
+
+        AuthResponse loginResponse = authService.login(loginRequest);
+
+        // Verify successful login
+        assertNotNull(loginResponse);
+        assertEquals("mock-login-token", loginResponse.getToken());
+        assertEquals(1L, loginResponse.getUserId());
+    }
+
+    /**
+     * Unit tests a successful registration, than a failed login with incorrect
+     * username
+     */
+    @Test
+    void testRegisterLoginFailure_IncorrectUsername() {
+        // Testing Registration
+        RegisterRequest registerRequest = new RegisterRequest("username", "email", "password");
+        User user = createMockUser(registerRequest);
+
+        // Simulate mock repository
+        when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(registerRequest.getUsername())).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-register-token");
+
+        AuthResponse registerResponse = authService.register(registerRequest);
+
+        // Verify successful registration
+        assertNotNull(registerResponse);
+        assertEquals("mock-register-token", registerResponse.getToken());
+        assertEquals(1L, registerResponse.getUserId());
+
+        // Testing Login
+        LoginRequest loginRequest = new LoginRequest("incorrect_username", "password"); // Incorrect Username
+
+        when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.empty());
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
+
+        // Verify unsuccessful
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> authService.login(loginRequest), "Expected login to throw IllegalArgumentException");
+
+        assertEquals(thrown.getMessage(), "Invalid username");
+    }
+
+    /**
+     * Unit tests a successful registration, than a failed login with incorrect
+     * password
+     */
+    @Test
+    void testRegisterLoginFailure_IncorrectPassword() {
+        // Testing Registration
+        RegisterRequest registerRequest = new RegisterRequest("username", "email", "password");
+        User user = createMockUser(registerRequest);
+
+        // Simulate mock repository
+        when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(registerRequest.getUsername())).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-register-token");
+
+        AuthResponse registerResponse = authService.register(registerRequest);
+
+        // Verify successful registration
+        assertNotNull(registerResponse);
+        assertEquals("mock-register-token", registerResponse.getToken());
+        assertEquals(1L, registerResponse.getUserId());
+
+        // Testing Login
+        LoginRequest loginRequest = new LoginRequest("username", "incorrect_password"); // Incorrect Password
+
+        when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
+        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
+
+        // Verify unsuccessful
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> authService.login(loginRequest), "Expected login to throw IllegalArgumentException");
+
+        assertEquals(thrown.getMessage(), "Invalid password");
     }
 
 }

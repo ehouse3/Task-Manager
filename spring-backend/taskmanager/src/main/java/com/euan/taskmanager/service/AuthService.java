@@ -56,11 +56,11 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         // Find user by username
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
         // Check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid password");
         }
 
         // Generate token

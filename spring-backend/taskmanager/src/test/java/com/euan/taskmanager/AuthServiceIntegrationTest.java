@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.euan.taskmanager.service.UserService;
@@ -26,23 +27,8 @@ import com.euan.taskmanager.service.AuthService;
  * Integration tests that start the full Spring context with H2 database
  */
 @SpringBootTest
-// @TestPropertySource(locations = "classpath:application-test.properties") //
-// Redefine properties path to use test db
-// @ActiveProfiles("test")
-@TestPropertySource(properties = { // TODO: attach to application-test.properties instead
-		"spring.datasource.url=jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH",
-		"spring.datasource.driver-class-name=org.h2.Driver",
-		"spring.datasource.username=sa",
-		"spring.datasource.password=",
-		"spring.jpa.hibernate.ddl-auto=create-drop",
-		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-		"spring.jpa.show-sql=false",
-		"server.port=8080",
-		"logging.level.com.euan.taskmanager=INFO",
-		"logging.level.org.hibernate=WARN",
-		"logging.level.org.springframework=WARN"
-		
-})
+@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:/application-test.properties")
 class AuthServiceIntegrationTests {
 
 	@Autowired

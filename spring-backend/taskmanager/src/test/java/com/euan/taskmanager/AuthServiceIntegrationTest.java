@@ -38,75 +38,41 @@ class AuthServiceIntegrationTests {
 	private AuthService authService;
 
 	// @Autowired
-	// private UserRepository userRepository;	
+	// private UserRepository userRepository;
 
 	@Test
-    void contextLoads() {
-        // Verify Spring context loads successfully
-        assertNotNull(authService);
-        assertNotNull(userService);
-    }
+	void contextLoads() {
+		// Verify Spring context loads successfully
+		assertNotNull(authService);
+		assertNotNull(userService);
+	}
 
 	@Test
 	void testAuthRegister() {
 		// // Create test data
-		// User user = new User(1L, UserRole.USER, "username", "nickname",
-		// 		"email@test.com", "encodedPassword", new ArrayList<>());
-		// RegisterRequest registerRequest = new RegisterRequest("username",
-		// 		"email@test.com", "password");
+		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
+				"email@test.com", "test_password", new ArrayList<>());
+		RegisterRequest registerRequest = new RegisterRequest("username",
+				"email@test.com", "test_password");
 
-		// // Mock the behavior
-		// AuthResponse mockResponse = new AuthResponse("token", 1L);
-		// when(authService.register(any(RegisterRequest.class))).thenReturn(mockResponse);
-		// when(userService.getUserById(1L)).thenReturn(Optional.of(user));
+		AuthResponse authResponse = authService.register(registerRequest);
 
-		// // Register new user
-		// AuthResponse response = authService.register(registerRequest);
+		assertNotNull(authResponse);
+		assertNotNull(authResponse.getUserId()); 
+		assertNotNull(authResponse.getToken());
+		assertEquals(baseUser.getId(), authResponse.getUserId()); // Verify
 
-		// // Retrieve new registered user
-		// User outputUser = userService.getUserById(response.getUserId())
-		// 		.orElseThrow(() -> new IllegalArgumentException("Creation of user was null"));
-
-		// assertNotNull(outputUser);
-
-		// // Testing
-		// assertEquals("username", outputUser.getUsername());
-		// assertEquals("email@test.com", outputUser.getEmail());
-		// assertEquals("nickname", outputUser.getNickName());
-		// assertEquals(UserRole.USER, outputUser.getRole());
-
-		// assertNotNull(outputUser.getId());
-		// assertNotNull(outputUser.getPassword());
+		Optional<User> testUserOptional = userService.getUserById(authResponse.getUserId());
+		assertNotNull(testUserOptional);
+		User testUser = testUserOptional.get();
+		
+		assertEquals(testUser.getId(), baseUser.getId());
+		assertEquals(testUser.getEmail(), baseUser.getEmail());
 	}
 
 	@Test
 	void testAuthLogin() {
-		// User user = new User(null, UserRole.USER, "loginuser", "loginnickname",
-		// 		"login@email.com", "loginpassword",
-		// 		new ArrayList<>());
-		// RegisterRequest registerRequest = new RegisterRequest(user.getUsername(),
-		// 		user.getEmail(), user.getPassword());
-
-		// // Register the user
-		// authService.register(registerRequest);
-
-		// // Login with the same credentials
-		// LoginRequest loginRequest = new LoginRequest(user.getUsername(),
-		// 		user.getPassword());
-		// AuthResponse loginResponse = authService.login(loginRequest);
-
-		// User outputUser = userService.getUserById(loginResponse.getUserId())
-		// 		.orElseThrow(() -> new IllegalArgumentException("Login failed"));
-		// assertNotNull(outputUser);
-
-		// // Testing
-		// assertEquals(user.getUsername(), outputUser.getUsername());
-		// assertEquals(user.getEmail(), outputUser.getEmail());
-		// assertEquals(user.getNickName(), outputUser.getNickName());
-		// assertEquals(user.getRole(), outputUser.getRole());
-
-		// assertNotNull(outputUser.getId());
-		// assertNotNull(outputUser.getPassword());
+		
 	}
 
 	// Create Duplicate User Test

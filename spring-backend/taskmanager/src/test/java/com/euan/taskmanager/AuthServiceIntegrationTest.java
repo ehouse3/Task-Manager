@@ -1,24 +1,35 @@
 package com.euan.taskmanager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.euan.taskmanager.service.UserService;
 import com.euan.taskmanager.utils.enums.UserRole;
+
+import jakarta.transaction.Transactional;
+
 import com.euan.taskmanager.dto.auth.AuthResponse;
 import com.euan.taskmanager.dto.auth.LoginRequest;
 import com.euan.taskmanager.dto.auth.RegisterRequest;
+import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 import com.euan.taskmanager.service.AuthService;
@@ -37,6 +48,10 @@ class AuthServiceIntegrationTests {
 	@Autowired
 	private AuthService authService;
 
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthServiceIntegrationTests.class);
+
 	// @Autowired
 	// private UserRepository userRepository;
 
@@ -51,23 +66,32 @@ class AuthServiceIntegrationTests {
 	void testAuthRegister() {
 		// // Create test data
 		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
-				"email@test.com", "test_password", new ArrayList<>());
+				"email@test.com", "test_password", new ArrayList<Project>());
 		RegisterRequest registerRequest = new RegisterRequest("username",
 				"email@test.com", "test_password");
 
 		AuthResponse authResponse = authService.register(registerRequest);
 
 		assertNotNull(authResponse);
-		assertNotNull(authResponse.getUserId()); 
+		assertNotNull(authResponse.getUserId());
 		assertNotNull(authResponse.getToken());
-		assertEquals(baseUser.getId(), authResponse.getUserId()); // Verify
+		assertNotEquals(authResponse.getToken(), "");
+		assertEquals(baseUser.getId(), authResponse.getUserId());
 
 		Optional<User> testUserOptional = userService.getUserById(authResponse.getUserId());
 		assertNotNull(testUserOptional);
 		User testUser = testUserOptional.get();
-		
-		assertEquals(testUser.getId(), baseUser.getId());
-		assertEquals(testUser.getEmail(), baseUser.getEmail());
+
+		assertEquals(baseUser.getId(), testUser.getId());
+		assertEquals(baseUser.getEmail(), testUser.getEmail());
+		assertEquals(baseUser.getUsername(), testUser.getUsername());
+
+
+		assertNotNull(testUser.getPassword());
+		// TODO: improve password test and improve projects test
+		// - Project test causing issue with keeping user session open for projects
+		// - Password test causing issue with encoding passwords matching
+
 	}
 
 	@Test

@@ -3,10 +3,13 @@ package com.euan.taskmanager.service;
 import com.euan.taskmanager.dto.auth.AuthResponse;
 import com.euan.taskmanager.dto.auth.LoginRequest;
 import com.euan.taskmanager.dto.auth.RegisterRequest;
+import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 import com.euan.taskmanager.utils.JwtUtil;
 import com.euan.taskmanager.utils.enums.UserRole;
+
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +44,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(UserRole.USER);
+        user.setProjects(new ArrayList<Project>());
 
         User savedUser = userRepository.save(user);
 

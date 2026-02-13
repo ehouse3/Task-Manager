@@ -12,6 +12,8 @@ import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
 import com.euan.taskmanager.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
 
@@ -69,6 +71,7 @@ public class UserService {
     }
 
     /** Get all projects for user by user ID */
+    @Transactional
     public List<Project> getProjectsByUserId(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));

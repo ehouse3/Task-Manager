@@ -26,6 +26,13 @@ Task Manager is a comprehensive task management platform designed to help teams 
 - **Project Organization**: Group tasks into projects for better organization
 - **Task Management**: Create, update, and track tasks with deadlines
 
+## Challenges Faced
+
+- **Integration Testing**: Lazy Loading issue preventing accesses after the load
+- **Unit Testing**: Setting up h2 mock database simulating postgresql
+- **Database Design**: Designing unidirectional Database for users
+- **Filter Implementation**: Multistep process to filter requests, including json manipulation, cookie and header extraction, and security setup
+
 ## Tech Stack
 
 ### Backend

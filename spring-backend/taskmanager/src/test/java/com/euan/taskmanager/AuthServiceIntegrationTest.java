@@ -82,21 +82,25 @@ class AuthServiceIntegrationTests {
 		assertNotNull(testUserOptional);
 		User testUser = testUserOptional.get();
 
+		// User properties verification
 		assertEquals(baseUser.getId(), testUser.getId());
 		assertEquals(baseUser.getEmail(), testUser.getEmail());
 		assertEquals(baseUser.getUsername(), testUser.getUsername());
 
+		// Project verification
+		List<Project> testProjects = userService.getProjectsByUserId(testUser.getId());
+		assertEquals(baseUser.getProjects(), testProjects);
 
+		// Password verification
 		assertNotNull(testUser.getPassword());
 		// TODO: improve password test and improve projects test
-		// - Project test causing issue with keeping user session open for projects
 		// - Password test causing issue with encoding passwords matching
 
 	}
 
 	@Test
 	void testAuthLogin() {
-		
+
 	}
 
 	// Create Duplicate User Test

@@ -1,9 +1,11 @@
 package com.euan.taskmanager.service;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,11 @@ public class UserService {
     /** Get user by user ID */
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+        // Possible fix for lazy fetch
+        // return userRepository.findById(id).map(user -> {
+        // Hibernate.initialize(user.getProjects());
+        // return user;
+        // });
     }
 
     /** Get user by username */
@@ -76,7 +83,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return user.getProjects();
+        return new ArrayList<>(user.getProjects());
     }
 
 }

@@ -64,7 +64,7 @@ class AuthServiceIntegrationTests {
 
 	@Test
 	void testAuthRegister() {
-		// // Create test data
+		// Create test data
 		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
 				"email@test.com", "test_password", new ArrayList<Project>());
 		RegisterRequest registerRequest = new RegisterRequest("username",
@@ -72,18 +72,20 @@ class AuthServiceIntegrationTests {
 
 		AuthResponse authResponse = authService.register(registerRequest);
 
+		// Verify Response
 		assertNotNull(authResponse);
-		assertNotNull(authResponse.getUserId());
 		assertNotNull(authResponse.getToken());
+		assertNotNull(authResponse.getUserId());
 		assertNotEquals(authResponse.getToken(), "");
-		assertEquals(baseUser.getId(), authResponse.getUserId());
+		assertEquals(baseUser.getId(), authResponse.getUserId()); // Not an accurate test. userId is assigned sequentially
 
+		// Extract test user
 		Optional<User> testUserOptional = userService.getUserById(authResponse.getUserId());
 		assertNotNull(testUserOptional);
 		User testUser = testUserOptional.get();
 
 		// User properties verification
-		assertEquals(baseUser.getId(), testUser.getId());
+		assertEquals(baseUser.getId(), testUser.getId()); // Not an accurate test. userId is assigned sequentially
 		assertEquals(baseUser.getEmail(), testUser.getEmail());
 		assertEquals(baseUser.getUsername(), testUser.getUsername());
 
@@ -92,10 +94,7 @@ class AuthServiceIntegrationTests {
 		assertEquals(baseUser.getProjects(), testProjects);
 
 		// Password verification
-		assertNotNull(testUser.getPassword());
-		// TODO: improve password test and improve projects test
-		// - Password test causing issue with encoding passwords matching
-
+		assertTrue(passwordEncoder.matches(baseUser.getPassword(), testUser.getPassword()));
 	}
 
 	@Test

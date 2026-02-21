@@ -42,7 +42,7 @@ public class User {
   @Column(nullable = false)
   private String password;
 
-  @Column(nullable = true)
+  @Column(nullable = false)
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Project> projects;
 }

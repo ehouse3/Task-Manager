@@ -21,7 +21,10 @@ import org.springframework.test.context.TestPropertySource;
 import com.euan.taskmanager.service.UserService;
 import com.euan.taskmanager.utils.enums.UserRole;
 
+import jakarta.transaction.Transactional;
+
 import com.euan.taskmanager.dto.auth.AuthResponse;
+import com.euan.taskmanager.dto.auth.LoginRequest;
 import com.euan.taskmanager.dto.auth.RegisterRequest;
 import com.euan.taskmanager.model.Project;
 import com.euan.taskmanager.model.User;
@@ -56,6 +59,7 @@ class AuthServiceIntegrationTests {
 	}
 
 	@Test
+	@Transactional
 	void testAuthRegister() {
 		// Create base case
 		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
@@ -94,8 +98,44 @@ class AuthServiceIntegrationTests {
 	}
 
 	@Test
+	@Transactional
 	void testAuthLogin() {
+		// Create base case
+		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
+				"email@test.com", "test_password", new ArrayList<Project>());
+		RegisterRequest registerRequest = new RegisterRequest("username",
+				"email@test.com", "test_password");
 
+		AuthResponse registerResponse = authService.register(registerRequest);
+
+		// Verify registered user
+		Optional<User> testRegisteredUserOptional = userService.getUserById(registerResponse.getUserId());
+		assertNotNull(testRegisteredUserOptional);
+
+		// Login User
+		LoginRequest loginRequest = new LoginRequest(baseUser.getUsername(),
+				baseUser.getPassword());
+		AuthResponse loginResponse = authService.login(loginRequest);
+
+		// Extract logged in user
+		Optional<User> userOptional = userService.getUserById(loginResponse.getUserId());
+		assertNotNull(userOptional);
+		User user = userOptional.get();
+
+		// Id is sequentially assigned, verify returned registered Id matches login Id
+		assertEquals(registerResponse.getUserId(), user.getId());
+
+		assertEquals(baseUser.getEmail(), user.getEmail());
+		assertEquals(baseUser.getUsername(), user.getUsername());
+		assertEquals(baseUser.getRole(), UserRole.USER);
+
+		// Password verification
+		assertTrue(passwordEncoder.matches(baseUser.getPassword(),
+				user.getPassword()));
+
+		// Project verification
+		List<Project> testProjects = userService.getProjectsByUserId(user.getId());
+		assertEquals(baseUser.getProjects(), testProjects);
 	}
 
 	// Create Duplicate User Test

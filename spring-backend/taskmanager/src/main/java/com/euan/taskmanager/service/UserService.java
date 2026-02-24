@@ -1,10 +1,10 @@
 package com.euan.taskmanager.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.euan.taskmanager.dto.UpdateUserDto;
@@ -18,6 +18,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     /** Get all users */
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -26,11 +28,6 @@ public class UserService {
     /** Get user by user ID */
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
-        // Possible fix for lazy fetch
-        // return userRepository.findById(id).map(user -> {
-        // Hibernate.initialize(user.getProjects());
-        // return user;
-        // });
     }
 
     /** Get user by username */
@@ -41,7 +38,7 @@ public class UserService {
     // createUser() is done through register() in Auth
 
     /** Update user by user ID */
-    public User updateUser(long id, UpdateUserDto dto) { // update user dto?
+    public User updateUser(long id, UpdateUserDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -55,14 +52,22 @@ public class UserService {
             user.setEmail(dto.getEmail().get());
 
         if (dto.getPassword().isPresent()) {
-            if (dto.getPassword().get().isEmpty()) { // valid password (len > 0)
-                user.setPassword(dto.getPassword().get());
+            if (isValidPassword(dto.getPassword().get())) {
+                user.setPassword(passwordEncoder.encode(dto.getPassword().get()));
             }
         }
         if (dto.getProjects().isPresent())
             user.setProjects(dto.getProjects().get());
 
         return userRepository.save(user);
+    }
+
+    /** Returns true if password is valid, false otherwise */
+    private boolean isValidPassword(String password) {
+        if (password.isEmpty() || password.isBlank()) {
+            return false;
+        }
+        return true;
     }
 
     /** Delete user by user ID */

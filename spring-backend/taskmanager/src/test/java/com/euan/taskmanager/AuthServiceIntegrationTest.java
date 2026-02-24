@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,6 @@ class AuthServiceIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthServiceIntegrationTests.class);
 
-	// @Autowired
-	// private UserRepository userRepository;
-
 	@Test
 	void contextLoads() {
 		// Verify Spring context loads successfully
@@ -58,9 +56,10 @@ class AuthServiceIntegrationTests {
 		assertNotNull(userService);
 	}
 
+	// Test Reigstration success
 	@Test
 	@Transactional
-	void testAuthRegister() {
+	void testRegisterSuccess() {
 		// Create base case
 		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
 				"email@test.com", "test_password", new ArrayList<Project>());
@@ -75,16 +74,12 @@ class AuthServiceIntegrationTests {
 		assertNotNull(authResponse.getUserId());
 		assertNotEquals(authResponse.getToken(), "");
 
-		// Not an accurate test. userId is assigned sequentially
-		assertEquals(baseUser.getId(), authResponse.getUserId());
-
 		// Extract test user
 		Optional<User> userOptional = userService.getUserById(authResponse.getUserId());
 		assertNotNull(userOptional);
 		User user = userOptional.get();
 
 		// User properties verification
-		assertEquals(baseUser.getId(), user.getId()); // Not an accurate test. userId is assigned sequentially
 		assertEquals(baseUser.getEmail(), user.getEmail());
 		assertEquals(baseUser.getUsername(), user.getUsername());
 		assertEquals(baseUser.getRole(), UserRole.USER);
@@ -97,9 +92,10 @@ class AuthServiceIntegrationTests {
 		assertTrue(passwordEncoder.matches(baseUser.getPassword(), user.getPassword()));
 	}
 
+	// Test Registration and Login success
 	@Test
 	@Transactional
-	void testAuthLogin() {
+	void testRegisterLoginSucess() {
 		// Create base case
 		User baseUser = new User(1L, UserRole.USER, "username", "nickname",
 				"email@test.com", "test_password", new ArrayList<Project>());
@@ -138,10 +134,63 @@ class AuthServiceIntegrationTests {
 		assertEquals(baseUser.getProjects(), testProjects);
 	}
 
-	// Create Duplicate User Test
+	// Test Registration, fail because email already exists
+	@Test
+	@Transactional
+	void testRegisterFailure_EmailExists() {
+		RegisterRequest registerRequest1 = new RegisterRequest("username1",
+				"email@test.com", "test_password");
+		authService.register(registerRequest1);
 
-	// Create Wrong Login Information Test
+		RegisterRequest registerRequest2 = new RegisterRequest("username2",
+				"email@test.com", "test_password"); // Duplicate Email
 
-	// Create Register and Login in one test
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> authService.register(registerRequest2), "Expected register to throw IllegalArgumentException");
+	}
+
+	// Test Registration, fail because username already exists
+	@Test
+	@Transactional
+	void testRegisterFailure_UsernameExists() {
+		RegisterRequest registerRequest1 = new RegisterRequest("username",
+				"email1@test.com", "test_password");
+		authService.register(registerRequest1);
+
+		RegisterRequest registerRequest2 = new RegisterRequest("username",
+				"email2@test.com", "test_password"); // Duplicate Username
+
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> authService.register(registerRequest2), "Expected register to throw IllegalArgumentException");
+	}
+
+	// Test Registration and login, fail because username incorrect
+	@Test
+	@Transactional
+	void testRegisterLoginFailure_IncorrectUsername() {
+		RegisterRequest registerRequest = new RegisterRequest("username",
+				"email@test.com", "test_password");
+		authService.register(registerRequest);
+
+		LoginRequest loginRequest = new LoginRequest("wrongusername",
+				"test_password");
+
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> authService.login(loginRequest), "Expected register to throw IllegalArgumentException");
+	}
+
+	// Test Registration and login, fail because password incorrect
+	@Test
+	@Transactional
+	void testRegisterLoginFailure_IncorrectPassword() {
+		RegisterRequest registerRequest = new RegisterRequest("username",
+				"email@test.com", "test_password");
+		authService.register(registerRequest);
+
+		LoginRequest loginRequest = new LoginRequest("username", "wrongpassword"); // Incorrect Password
+
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> authService.login(loginRequest), "Expected register to throw IllegalArgumentException");
+	}
 
 }

@@ -32,7 +32,6 @@ import com.euan.taskmanager.utils.enums.UserRole;
  * Unit tests for Authservice with Mockito
  * No Database Needed
  */
-@MockitoSettings(strictness = Strictness.LENIENT) // Fix
 @ExtendWith(MockitoExtension.class)
 class AuthServiceUnitTests {
 
@@ -95,8 +94,8 @@ class AuthServiceUnitTests {
         // Simulate mock repository
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(true); // Email already exists
         when(userRepository.existsByUsername(request.getUsername())).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token");
+        // when(userRepository.save(any(User.class))).thenReturn(user); // Unused stubbing
+        // when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token"); // Unused stubbing
 
         // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
@@ -116,10 +115,10 @@ class AuthServiceUnitTests {
         User user = createMockUser(request);
 
         // Simulate mock repository
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+        // when(userRepository.existsByEmail(request.getEmail())).thenReturn(false); // Unused stubbing
         when(userRepository.existsByUsername(request.getUsername())).thenReturn(true); // Username already exists
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token");
+        // when(userRepository.save(any(User.class))).thenReturn(user); // Unused stubbing
+        // when(jwtUtil.generateToken(request.getUsername(), 1L)).thenReturn("mock-token"); // Unused stubbing
 
         // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
@@ -190,7 +189,7 @@ class AuthServiceUnitTests {
         LoginRequest loginRequest = new LoginRequest("incorrect_username", "password"); // Incorrect Username
 
         when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.empty());
-        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
+        // when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token"); // Unused stubbing
 
         // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,
@@ -226,7 +225,7 @@ class AuthServiceUnitTests {
         LoginRequest loginRequest = new LoginRequest("username", "incorrect_password"); // Incorrect Password
 
         when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
-        when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
+        // when(jwtUtil.generateToken(registerRequest.getUsername(), 1L)).thenReturn("mock-login-token");
 
         // Verify unsuccessful
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,

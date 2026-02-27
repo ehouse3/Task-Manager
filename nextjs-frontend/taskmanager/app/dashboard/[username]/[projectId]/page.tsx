@@ -27,13 +27,13 @@ export default function Page({
   }, [params]);
 
   // Wait for auth to be initialized
-  if (auth?.isLoading) {
+  if (!auth || auth.isLoading) {
     return <div>Loading...</div>;
   }
 
   async function handleCreateTask() {
     try {
-      const project: Project | undefined = auth.user.projects?.find(
+      const project: Project | undefined = auth?.user.projects?.find(
         (project) => {
           return project.id === projectId;
         },
@@ -68,7 +68,7 @@ export default function Page({
       setResultCreateTask("Task created successfully!");
 
       // Refresh user to update projects/tasks
-      auth.refreshUser();
+      auth?.refreshUser();
       return task;
     } catch (error) {
       console.error("Error creating task:", error);

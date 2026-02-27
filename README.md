@@ -14,6 +14,7 @@ Task Manager is a comprehensive task management platform designed to help teams 
 - Progress tracking
 - Team workspaces/ permissions / admin implementation
 - Recurring tasks
+- Unit testing and Integration testing for Auth
 
 ## Features
 

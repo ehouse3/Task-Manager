@@ -1,4 +1,4 @@
-package com.euan.taskmanager;
+package com.euan.taskmanager.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

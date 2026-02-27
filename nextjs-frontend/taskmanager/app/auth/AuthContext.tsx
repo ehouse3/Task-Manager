@@ -16,11 +16,13 @@ import {
 import { login, register } from "@/lib/api/auth";
 import { getUserById } from "@/lib/api/users";
 
+/** TODO: page loads wait for non essential context functions, like login and logout. */
+
 // Context for authenticated pages (no null)
 interface AuthenticatedContextType {
   user: User;
   token: string;
-  isLoading: boolean; // already loaded?
+  isLoading: boolean;
   logout: () => void;
   refreshUser: () => Promise<User | null>;
 }
@@ -67,10 +69,11 @@ export function useAuth(): AuthenticatedContextType | null {
   }
   // Protected route confirmation (awaiting auth init)
   if (context.isLoading || !context.user || !context.token) {
+    // TODO: redirect to loading page
     return null;
   }
 
-  // Migrate variable from AuthContextType to AuthenticatedContextType
+  // Migrate variables from AuthContextType to AuthenticatedContextType
   const authenticatedContext: AuthenticatedContextType = {
     user: context.user,
     token: context.token,
@@ -86,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // States for context type
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // improve so useAuth() initializes the user and token state
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   /** Initialize auth from cookies on mount */
   useEffect(() => {

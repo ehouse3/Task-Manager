@@ -133,10 +133,6 @@ The backend provides REST endpoints for:
 
 All endpoints require JWT authentication tokens (except login/register).
 
-## Contributing
+## Example Photos
 
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
-## License
-
-This project is open source and available under the MIT License.
+![Example Image Of Home Page](ReadMeImages/image.png)

@@ -9,13 +9,10 @@ export interface Project {
 
 export interface CreateProjectDto {
   name: string;
-  description?: string;
   userId: number;
-  // tasks?: Task[];
 }
 
 export interface UpdateProjectDto {
   name?: string;
   description?: string;
-  taskIds?: Task[];
 }

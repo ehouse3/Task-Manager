@@ -64,9 +64,6 @@ public class ProjectService {
             project.setName(dto.getName().get());
         if (dto.getDescription().isPresent())
             project.setDescription(dto.getDescription().get());
-        if (dto.getTaskIds().isPresent()) { // add more verification?
-            project.setTasks(taskRepository.findAllById(dto.getTaskIds().get()));
-        }
 
         return projectRepository.save(project);
     }

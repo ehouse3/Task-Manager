@@ -14,5 +14,4 @@ public class UpdateUserDto {
     private Optional<String> nickName;
     private Optional<String> email;
     private Optional<String> password;
-    private Optional<List<Project>> projects;
 }

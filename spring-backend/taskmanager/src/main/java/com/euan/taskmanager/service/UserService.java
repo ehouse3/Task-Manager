@@ -56,8 +56,9 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(dto.getPassword().get()));
             }
         }
-        if (dto.getProjects().isPresent())
-            user.setProjects(dto.getProjects().get());
+        // Doesn't make sense to be able to update an entire project
+        // if (dto.getProjects().isPresent()) 
+        //     user.setProjects(dto.getProjects().get());
 
         return userRepository.save(user);
     }

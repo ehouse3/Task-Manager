@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class UpdateProjectDto {
-    private Optional<String> name;
-    private Optional<String> description;
-    private Optional<List<Long>> taskIds;
+    private Optional<String> name; //name
+    private Optional<String> description; //desription
 }

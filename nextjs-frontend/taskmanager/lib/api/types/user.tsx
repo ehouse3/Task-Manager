@@ -21,5 +21,4 @@ export interface UpdateUserDto {
   email?: string;
   password?: string;
   nickname?: string;
-  projecs?: number[];
 }

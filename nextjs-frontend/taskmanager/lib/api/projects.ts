@@ -12,7 +12,7 @@ export const getProjectById = async (id: number): Promise<Project> => {
 };
 
 export const createProject = async (
-  project: CreateProjectDto
+  project: CreateProjectDto,
 ): Promise<Project> => {
   const response = await apiClient.post("/projects", project);
   return response.data;
@@ -20,7 +20,7 @@ export const createProject = async (
 
 export const updateProject = async (
   id: number,
-  project: UpdateProjectDto
+  project: UpdateProjectDto,
 ): Promise<Project> => {
   const response = await apiClient.put(`/projects/${id}`, project);
   return response.data;

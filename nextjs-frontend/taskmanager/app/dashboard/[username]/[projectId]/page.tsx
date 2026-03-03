@@ -31,6 +31,10 @@ export default function Page({
     return <div>Loading...</div>;
   }
 
+  async function handleUpdateProject() {}
+
+  async function handleDeleteProject() {}
+
   async function handleCreateTask() {
     try {
       const project: Project | undefined = auth?.user.projects?.find(
@@ -77,8 +81,16 @@ export default function Page({
   }
 
   return (
-    <div>
-      <Button onClick={handleCreateTask}>Create New Task</Button>
+    <div className="flex flex-row justify-center gap-2 bg-foreground py-10 mt-20">
+      <Button variant="medium" onClick={handleCreateTask}>
+        Create New Task
+      </Button>
+      <Button variant="medium" onClick={handleUpdateProject}>
+        Update Project
+      </Button>
+      <Button variant="medium" onClick={handleDeleteProject}>
+        Delete Project
+      </Button>
       {/* Result message */}
       <div className="mt-3 text-center">
         <h3 className="text-red-800">{resultCreateTask}</h3>

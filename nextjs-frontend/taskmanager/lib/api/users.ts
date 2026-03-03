@@ -17,7 +17,7 @@ export const getUserById = async (id: number): Promise<User> => {
 export const getProjectsByUserId = async (id: number): Promise<Project[]> => {
   const response = await apiClient.get(`/users/projects/${id}`);
   return response.data;
-}
+};
 
 // Delete user
 export const deleteUser = async (id: number): Promise<void> => {

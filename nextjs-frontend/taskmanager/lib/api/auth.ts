@@ -3,7 +3,7 @@ import { LoginRequest, RegisterRequest, AuthResponse } from "./types/auth";
 
 // Login user
 export const login = async (
-  loginRequest: LoginRequest
+  loginRequest: LoginRequest,
 ): Promise<AuthResponse> => {
   const response = await apiClient.post("/auth/login", loginRequest);
   return response.data;
@@ -11,7 +11,7 @@ export const login = async (
 
 // Register new user
 export const register = async (
-  registerRequest: RegisterRequest
+  registerRequest: RegisterRequest,
 ): Promise<AuthResponse> => {
   const response = await apiClient.post("/auth/register", registerRequest);
   return response.data;

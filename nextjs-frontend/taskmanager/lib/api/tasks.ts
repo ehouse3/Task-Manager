@@ -18,7 +18,7 @@ export const createTask = async (task: CreateTaskDto): Promise<Task> => {
 
 export const updateTask = async (
   id: number,
-  task: UpdateTaskDto
+  task: UpdateTaskDto,
 ): Promise<Task> => {
   const response = await apiClient.put(`/tasks/${id}`, task);
   return response.data;

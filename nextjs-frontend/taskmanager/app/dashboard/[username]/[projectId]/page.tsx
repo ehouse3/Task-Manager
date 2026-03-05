@@ -4,6 +4,7 @@ import { useAuth } from "../../../auth/AuthContext";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/lib/components";
 import { createTask } from "@/lib/api/tasks";
+import { updateProject, deleteProject } from "@/lib/api/projects";
 import { CreateTaskDto, Task } from "@/lib/api/types/task";
 import { Project } from "@/lib/api/types/project";
 
@@ -16,6 +17,7 @@ export default function Page({
   }>;
 }) {
   const auth = useAuth();
+  const router = require("next/navigation").useRouter();
   const [resultCreateTask, setResultCreateTask] = useState<string>(""); // Result of creating task
   const [projectId, setProjectId] = useState<number | null>(null); // Current page's selected project
 
@@ -31,15 +33,101 @@ export default function Page({
     return <div>Loading...</div>;
   }
 
-  async function handleUpdateProject() {}
+  async function handleUpdateProject() {
+    try {
+      if (!projectId) {
+        setResultCreateTask("No project selected");
+        return;
+      }
 
-  async function handleDeleteProject() {}
+      const project: Project | undefined = auth?.user.projects?.find(
+        (project) => project.id === projectId,
+      );
+
+      if (!project) {
+        setResultCreateTask("Project not found!");
+        return;
+      }
+
+      const newName: string | null = prompt("New project name:", project.name);
+      if (newName === null) return; // user cancelled
+      if (newName.trim() === "") {
+        setResultCreateTask("Project name cannot be empty");
+        return;
+      }
+
+      const newDescription: string | null = prompt(
+        "New project description (optional):",
+        project.description ?? "",
+      );
+
+      const dto: Partial<Project> = {};
+      if (newName !== project.name) dto.name = newName;
+      if (newDescription !== project.description)
+        dto.description = newDescription ?? undefined;
+
+      if (Object.keys(dto).length === 0) {
+        setResultCreateTask("No changes to update");
+        return;
+      }
+
+      setResultCreateTask("Updating project...");
+      await updateProject(project.id, dto as any);
+      setResultCreateTask("Project updated successfully!");
+      await auth?.refreshUser();
+    } catch (error) {
+      console.error("Error updating project:", error);
+      setResultCreateTask("Failed to update project. Please try again.");
+    }
+  }
+
+  async function handleDeleteProject() {
+    try {
+      if (!projectId) {
+        setResultCreateTask("No project selected");
+        return;
+      }
+
+      const project: Project | undefined = auth?.user.projects?.find(
+        (project) => project.id == projectId, // TODO: projectId being interprepted as string
+      );
+
+      // console.log(
+      //   "typeof project.id",
+      //   typeof project?.id,
+      //   "typeof page's state projectId",
+      //   typeof projectId,
+      // );
+
+      if (!project) {
+        setResultCreateTask("Project not found!");
+        return;
+      }
+
+      const confirmed = confirm(
+        `Delete project "${project.name}"? This action cannot be undone.`,
+      );
+
+      if (!confirmed) return;
+
+      setResultCreateTask("Deleting project...");
+      await deleteProject(project.id);
+      setResultCreateTask("Project deleted successfully");
+      await auth?.refreshUser();
+      try {
+        router.push(`/dashboard/${auth?.user.username}`);
+      } catch (e) {}
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      setResultCreateTask("Failed to delete project. Please try again.");
+    }
+  }
 
   async function handleCreateTask() {
     try {
       const project: Project | undefined = auth?.user.projects?.find(
         (project) => {
-          return project.id === projectId;
+          return project.id == projectId;
         },
       );
 
@@ -65,7 +153,6 @@ export default function Page({
       setResultCreateTask("Creating Task");
       const dto: CreateTaskDto = {
         title: title,
-        description: description || undefined,
         projectId: project.id,
       };
       const task: Task = await createTask(dto);

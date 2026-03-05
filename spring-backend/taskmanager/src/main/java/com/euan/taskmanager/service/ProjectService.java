@@ -69,9 +69,19 @@ public class ProjectService {
     }
 
     /** Delete projecy by project ID */
-    public void deleteProject(Long id) {
-        if (projectRepository.existsById(id) == false)
-            throw new RuntimeException("Project not found");
-        projectRepository.deleteById(id);
+    public void deleteProject(Long userId, Long projectId) {
+        // Deletes project through parent user, letting orphanRemoval clean up
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Find user's project to remove
+        Project project = user.getProjects().stream()
+            .filter(p -> p.getId().equals(projectId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Project not found or doesn't belong to user"));
+
+        user.getProjects().remove(project);
+        userRepository.save(user);
+
+
     }
 }

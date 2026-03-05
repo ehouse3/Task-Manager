@@ -5,6 +5,8 @@ import com.euan.taskmanager.service.ProjectService;
 import com.euan.taskmanager.dto.CreateProjectDto;
 import com.euan.taskmanager.dto.UpdateProjectDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     /** Get request to get all projects */
     @GetMapping
@@ -41,6 +45,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<?> createProject(@RequestBody CreateProjectDto dto) {
         try {
+            logger.debug("Creating project:"+dto);
             Project createdProject = projectService.createProject(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
         } catch (RuntimeException e) { // Exception thrown from service
@@ -60,11 +65,12 @@ public class ProjectController {
 
     }
 
-    /** Delete request to delete project by project ID */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable Long id) {
+    /** Delete request to delete project by userId and projectId */
+    @DeleteMapping("/{userId}/{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long userId, @PathVariable Long projectId) {
         try {
-            projectService.deleteProject(id);
+            logger.debug("Project Controller deleting project...");
+            projectService.deleteProject(userId, projectId);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) { // Exception thrown from service
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

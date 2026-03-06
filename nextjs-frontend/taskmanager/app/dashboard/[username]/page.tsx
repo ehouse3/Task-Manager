@@ -38,7 +38,7 @@ export default function UserDashboard({
   /** Component that renders the list of projects provided */
   function ProjectsNavigation(props: ProjectsNavigationProps): ReactElement {
     return (
-      <ul className="flex flex-row">
+      <ul className="flex flex-row flex-wrap justify-center">
         {props.projects.map((project: Project) => (
           // Needs new colors
           <Navigate
@@ -46,9 +46,9 @@ export default function UserDashboard({
             key={project.id}
             variant="bare"
           >
-            <li className="flex flex-col min-w-md items-center m-2 text-text-dark bg-foreground-lighter rounded p-2 hover:bg-foreground-lighter-hover">
+            <li className="flex flex-col min-w-sm items-center m-2 text-text-dark bg-foreground-lighter rounded p-2 hover:bg-foreground-lighter-hover">
               <h2 className="">{project.name}</h2>
-              <h3 className="min-h-20">{project.description ?? ""}</h3>
+              <h3 className="min-h-12">{project.description ?? ""}</h3>
             </li>
           </Navigate>
         ))}
@@ -93,10 +93,9 @@ export default function UserDashboard({
 
   return (
     <div>
-      <h1 className="mt-20 text-center">
-        Welcome {auth?.user?.nickname ?? auth?.user?.username}!
-      </h1>
-      <div className="flex flex-col items-center bg-foreground py-10">
+      <h1 className="mt-20 text-center">Project Dashboard</h1>
+
+      <div className="flex flex-col items-center py-10 bg-foreground">
         {/* Create new project button */}
         <div className="">
           <Button variant="medium" onClick={handleCreateProject}>
@@ -110,7 +109,7 @@ export default function UserDashboard({
         </div>
 
         {/* List and Navigate to projects */}
-        <div className="flex flex-row my-10 rounded-xl">
+        <div className="mx-10 my-10">
           {auth?.user?.projects != null && auth?.user?.projects?.length > 0 ? (
             <ProjectsNavigation
               projects={auth.user.projects}

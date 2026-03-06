@@ -17,7 +17,7 @@ function DashboardHeader(props: DashboardHeaderProps): ReactElement {
   return (
     <div className="flex flex-row bg-foreground p-2 justify-between items-center border-b-5 border-foreground-lighter">
       <Navigate variant="medium" href={`/dashboard/${props.user.username}`}>
-        {props.user.nickname} Profile
+        {props.user.nickname ?? props.user.username}
       </Navigate>
       <h1 className="">Task Manager</h1>
       <Button variant="medium" onClick={props.logout}>

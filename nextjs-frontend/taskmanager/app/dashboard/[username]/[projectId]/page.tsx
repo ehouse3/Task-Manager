@@ -1,11 +1,15 @@
 "use client";
 
 import { useAuth } from "../../../auth/AuthContext";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Button } from "@/lib/components";
-import { createTask } from "@/lib/api/tasks";
-import { updateProject, deleteProject } from "@/lib/api/projects";
-import { CreateTaskDto, Task } from "@/lib/api/types/task";
+import { createTask, updateTask } from "@/lib/api/tasks";
+import {
+  updateProject,
+  deleteProject,
+  getProjectById,
+} from "@/lib/api/projects";
+import { CreateTaskDto, Task, UpdateTaskDto } from "@/lib/api/types/task";
 import { Project } from "@/lib/api/types/project";
 import { useRouter } from "next/navigation";
 
@@ -20,12 +24,13 @@ export default function Page({
   const auth = useAuth();
   const router = useRouter();
   const [result, setResult] = useState<string>(""); // Result of functions
-  const [projectId, setProjectId] = useState<number | null>(null); // Current page's selected project
+  // const [projectId, setProjectId] = useState<number | null>(null); // Current page's selected project
+  const [project, setProject] = useState<Project | null>(null);
 
   /** Retrieve project name from params */
   useEffect(() => {
-    params.then((param) => {
-      setProjectId(param.projectId);
+    params.then(async (param) => {
+      setProject(await getProjectById(param.projectId));
     });
   }, [params]);
 
@@ -40,38 +45,38 @@ export default function Page({
     //         setResult("No project selected");
     //         return;
     //       }
-    // 
+    //
     //       const project: Project | undefined = auth?.user.projects?.find(
     //         (project) => project.id === projectId,
     //       );
-    // 
+    //
     //       if (!project) {
     //         setResult("Project not found!");
     //         return;
     //       }
-    // 
+    //
     //       const newName: string | null = prompt("New project name:", project.name);
     //       if (newName === null) return; // user cancelled
     //       if (newName.trim() === "") {
     //         setResult("Project name cannot be empty");
     //         return;
     //       }
-    // 
+    //
     //       const newDescription: string | null = prompt(
     //         "New project description (optional):",
     //         project.description ?? "",
     //       );
-    // 
+    //
     //       const dto: Partial<Project> = {};
     //       if (newName !== project.name) dto.name = newName;
     //       if (newDescription !== project.description)
     //         dto.description = newDescription ?? undefined;
-    // 
+    //
     //       if (Object.keys(dto).length === 0) {
     //         setResult("No changes to update");
     //         return;
     //       }
-    // 
+    //
     //       setResult("Updating project...");
     //       await updateProject(project.id, dto as any);
     //       setResult("Project updated successfully!");
@@ -85,27 +90,9 @@ export default function Page({
   async function handleDeleteProject() {
     try {
       if (auth?.user?.id == undefined) {
-        setResult(
-          "User Id is not present to delete the project!",
-        );
+        setResult("User Id is not present to delete the project!");
         return;
       }
-
-      if (!projectId) {
-        setResult("Current project not found!");
-        return;
-      }
-
-      const project: Project | undefined = auth?.user.projects?.find(
-        (project) => project.id == projectId, // TODO: projectId being interprepted as string
-      );
-
-      // console.log(
-      //   "typeof project.id",
-      //   typeof project?.id,
-      //   "typeof page's state projectId",
-      //   typeof projectId,
-      // );
 
       if (!project) {
         setResult("Project not found!");
@@ -125,7 +112,6 @@ export default function Page({
       await auth.refreshUser();
 
       router.push(`/dashboard/${auth.user.username}`);
-
     } catch (error) {
       console.error("Error deleting project:", error);
       setResult("Failed to delete project. Please try again.");
@@ -134,12 +120,6 @@ export default function Page({
 
   async function handleCreateTask() {
     try {
-      const project: Project | undefined = auth?.user.projects?.find(
-        (project) => {
-          return project.id == projectId;
-        },
-      );
-
       if (!project) {
         setResult("Project not found!");
         return;
@@ -154,15 +134,30 @@ export default function Page({
         return;
       }
 
+      // const description: string | null = prompt("Describe the project");
+
+      // const dueDate: string | null = prompt(
+      //   "When should the project be done by?",
+      // );
+
       const dto: CreateTaskDto = {
         title: title,
         projectId: project.id,
       };
-      const task: Task = await createTask(dto);
+      let task: Task = await createTask(dto);
       setResult("Task created successfully!");
 
-      // Refresh user to update projects/tasks
-      auth?.refreshUser();
+      // if (description) {
+      //   const updateTaskDto: UpdateTaskDto = {
+      //     description: description ?? undefined,
+      //     dueDate: dueDate ?? undefined,
+      //   };
+
+      //   task = await updateTask(task.id, updateTaskDto);
+      // }
+
+      // Refresh project to update tasks
+      setProject(await getProjectById(project.id));
       return task;
     } catch (error) {
       console.error("Error creating task:", error);
@@ -170,24 +165,61 @@ export default function Page({
     }
   }
 
-  return (
-    <div className="bg-foreground">
-      {/* Button Flexbox */}
-      <div className="flex flex-row justify-center gap-2 bg-foreground py-10 mt-20">
-        <Button variant="medium" onClick={handleCreateTask}>
-          Create New Task
-        </Button>
-        <Button variant="medium" onClick={handleUpdateProject}>
-          Update Project
-        </Button>
-        <Button variant="medium" onClick={handleDeleteProject}>
-          Delete Project
-        </Button>
-      </div>
+  interface TasksListProps {
+    tasks: Task[];
+  }
+  /** Component that renders the list of projects provided */
+  function TasksList(props: TasksListProps): ReactElement {
+    return (
+      <ul className="flex flex-row flex-wrap justify-center">
+        {props.tasks.map((task: Task) => (
+          // Needs new colors
+          <div key={task.id}>
+            <li className="flex flex-col min-w-sm items-center m-2 text-text-dark bg-foreground-lighter rounded p-2 hover:bg-foreground-lighter-hover">
+              <h2 className="">{task.title}</h2>
+              <div className="min-h-12">
+                <h3>{task.description ?? ""}</h3>
+                <h3>Priority: {task.priority}</h3>
+                <h3>{task.dueDate}</h3>
+              </div>
+            </li>
+          </div>
+        ))}
+      </ul>
+    );
+  }
 
-      {/* Result message */}
-      <div className="p-3 text-center">
-        <h3 className="text-red-800">{result}</h3>
+  return (
+    <div>
+      <h1 className="mt-20 text-center">Task Dashboard for {project?.name}</h1>
+
+      <div className="flex flex-col items-center bg-foreground py-10">
+        {/* Button Flexbox */}
+        <div className="flex flex-row justify-center gap-2">
+          <Button variant="medium" onClick={handleCreateTask}>
+            Create New Task
+          </Button>
+          <Button variant="medium" onClick={handleUpdateProject}>
+            Update Project
+          </Button>
+          <Button variant="medium" onClick={handleDeleteProject}>
+            Delete Project
+          </Button>
+        </div>
+
+        {/* Result message */}
+        <div className="p-3 text-center">
+          <h3 className="text-red-800">{result}</h3>
+        </div>
+
+        {/* Display project's tasks */}
+        <div className="m-10">
+          {project?.tasks != undefined && project?.tasks.length > 0 ? (
+            <TasksList tasks={project?.tasks}></TasksList>
+          ) : (
+            <h2 className="">No tasks found</h2>
+          )}
+        </div>
       </div>
     </div>
   );

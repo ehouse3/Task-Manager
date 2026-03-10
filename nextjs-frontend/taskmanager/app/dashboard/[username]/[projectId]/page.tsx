@@ -45,21 +45,24 @@ export default function Page({
         return;
       }
 
-      const newName: string | null = prompt("New project name:", project.name);
-      if (newName === null || newName.trim() === "") {
-        setResult("Project name cannot be empty");
-        return;
+      let newName: string | null = prompt(
+        "New project name (leave empty to not change name):",
+        project.name,
+      );
+
+      // Do not update string on empty case
+      if (newName?.trim() === "") {
+        newName = null;
       }
 
       const newDescription: string | null = prompt(
         "New project description (optional):",
-        project.description ?? "",
       );
 
-      const dto: UpdateProjectDto = {};
-      if (newName !== project.name) dto.name = newName;
-      if (newDescription !== project.description)
-        dto.description = newDescription ?? undefined;
+      const dto: UpdateProjectDto = {
+        name: newName ?? undefined,
+        description: newDescription ?? undefined,
+      };
 
       if (Object.keys(dto).length === 0) {
         setResult("No changes to update");

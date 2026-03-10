@@ -1,4 +1,12 @@
-# Build stage (docker build --target builder .)
+# Run normally with:
+#   docker-compose build
+#   docker-compose down
+#   docker-compose up
+
+# Build stage – compiles the application and produces the JAR.
+# nothing runnable comes out of this stage; you only use it to build or test
+# the code.  To execute just this stage run:
+#    docker build --target builder -t taskmanager-builder .
 FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /build
 
@@ -17,14 +25,16 @@ COPY src ./src
 # Build application skipping tests (tests can be run in separate stage)
 RUN mvn clean package -DskipTests
 
-# Test stage (optional, can be used for validation) (docker build --target builder .)
+# Test stage (optional, can be used for validation) 
+#   docker build --target builder .
 FROM maven:3.9.4-eclipse-temurin-17 AS tester
 WORKDIR /test
 COPY --from=builder /build .
 RUN mvn test
 
-# Runtime stage
-FROM eclipse-temurin:17-jre-alpine
+# Runtime stage 
+#   `docker build --target runtime`
+FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
 
 # Add health check

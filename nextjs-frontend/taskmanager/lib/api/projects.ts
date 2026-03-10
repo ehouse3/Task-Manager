@@ -26,6 +26,6 @@ export const updateProject = async (
   return response.data;
 };
 
-export const deleteProject = async (id: number): Promise<void> => {
-  await apiClient.delete(`/projects/${id}`);
+export const deleteProject = async (userId: number, projectId: number): Promise<void> => {
+  await apiClient.delete(`/projects/${userId}/${projectId}`);
 };

@@ -10,7 +10,7 @@ import {
   getProjectById,
 } from "@/lib/api/projects";
 import { CreateTaskDto, Task, UpdateTaskDto } from "@/lib/api/types/task";
-import { Project } from "@/lib/api/types/project";
+import { Project, UpdateProjectDto } from "@/lib/api/types/project";
 import { useRouter } from "next/navigation";
 
 export default function Page({
@@ -24,8 +24,7 @@ export default function Page({
   const auth = useAuth();
   const router = useRouter();
   const [result, setResult] = useState<string>(""); // Result of functions
-  // const [projectId, setProjectId] = useState<number | null>(null); // Current page's selected project
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<Project | null>(null); // Page's project
 
   /** Retrieve project name from params */
   useEffect(() => {
@@ -40,51 +39,44 @@ export default function Page({
   }
 
   async function handleUpdateProject() {
-    //     try {
-    //       if (!projectId) {
-    //         setResult("No project selected");
-    //         return;
-    //       }
-    //
-    //       const project: Project | undefined = auth?.user.projects?.find(
-    //         (project) => project.id === projectId,
-    //       );
-    //
-    //       if (!project) {
-    //         setResult("Project not found!");
-    //         return;
-    //       }
-    //
-    //       const newName: string | null = prompt("New project name:", project.name);
-    //       if (newName === null) return; // user cancelled
-    //       if (newName.trim() === "") {
-    //         setResult("Project name cannot be empty");
-    //         return;
-    //       }
-    //
-    //       const newDescription: string | null = prompt(
-    //         "New project description (optional):",
-    //         project.description ?? "",
-    //       );
-    //
-    //       const dto: Partial<Project> = {};
-    //       if (newName !== project.name) dto.name = newName;
-    //       if (newDescription !== project.description)
-    //         dto.description = newDescription ?? undefined;
-    //
-    //       if (Object.keys(dto).length === 0) {
-    //         setResult("No changes to update");
-    //         return;
-    //       }
-    //
-    //       setResult("Updating project...");
-    //       await updateProject(project.id, dto as any);
-    //       setResult("Project updated successfully!");
-    //       await auth?.refreshUser();
-    //     } catch (error) {
-    //       console.error("Error updating project:", error);
-    //       setResult("Failed to update project. Please try again.");
-    //     }
+    try {
+      if (!project) {
+        setResult("Project not found!");
+        return;
+      }
+
+      const newName: string | null = prompt("New project name:", project.name);
+      if (newName === null || newName.trim() === "") {
+        setResult("Project name cannot be empty");
+        return;
+      }
+
+      const newDescription: string | null = prompt(
+        "New project description (optional):",
+        project.description ?? "",
+      );
+
+      const dto: UpdateProjectDto = {};
+      if (newName !== project.name) dto.name = newName;
+      if (newDescription !== project.description)
+        dto.description = newDescription ?? undefined;
+
+      if (Object.keys(dto).length === 0) {
+        setResult("No changes to update");
+        return;
+      }
+
+      setResult("Updating project...");
+
+      await updateProject(project.id, dto);
+      setResult("Project updated successfully!");
+
+      await auth?.refreshUser();
+      setProject(await getProjectById(project.id));
+    } catch (error) {
+      console.error("Error updating project:", error);
+      setResult("Failed to update project. Please try again.");
+    }
   }
 
   async function handleDeleteProject() {
